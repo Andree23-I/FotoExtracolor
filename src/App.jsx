@@ -10,8 +10,7 @@ import {
 import "./index.css";
 import Lightbox from "./components/Lightbox.jsx";
 import Carousel from "./components/Carousel.jsx";
-import logoDark from "./assets/bianco-e-nero-senza-sfondo.svg";
-import logoLight from "./assets/nero-e-bianco-senza-sfondo.svg";
+import AdminPage from "./components/AdminPage.jsx";
 import logo from "./assets/logo.jpeg";
 import heroPhoto from "./assets/scuro.jpeg";
 import lightHeroPhoto from "./assets/chiaro.jpeg";
@@ -46,7 +45,8 @@ function IconServices(props) {
       strokeLinejoin="round"
       {...props}
     >
-      <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
+      <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+      <circle cx="12" cy="13" r="4"></circle>
     </svg>
   );
 }
@@ -310,6 +310,8 @@ function GoogleReviewsWidget({ className = "", content }) {
   );
 }
 
+import PhotoUploadModal from "./components/PhotoUploadModal.jsx";
+
 function HeaderTray({ language, setLanguage, theme, toggleTheme, content }) {
   const [clock, setClock] = useState(new Date());
 
@@ -358,7 +360,7 @@ function HeaderTray({ language, setLanguage, theme, toggleTheme, content }) {
   );
 }
 
-function TopHeaderBar({ language, setLanguage, theme, toggleTheme, content }) {
+function TopHeaderBar({ language, setLanguage, theme, toggleTheme, content, onOpenPhotoModal }) {
   const navigate = useNavigate();
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -433,6 +435,7 @@ function TopHeaderBar({ language, setLanguage, theme, toggleTheme, content }) {
               </button>
             </div>
             <div className="mobile-nav-links">
+
               {menuItems.map((item) => {
                 const Icon = item.icon;
                 const isActive = item.id === "/#contatti"
@@ -456,6 +459,7 @@ function TopHeaderBar({ language, setLanguage, theme, toggleTheme, content }) {
           </nav>
         </div>
       )}
+
     </header>
   );
 }
@@ -463,77 +467,42 @@ function TopHeaderBar({ language, setLanguage, theme, toggleTheme, content }) {
 function WindowsTaskbar({ content }) {
   const navigate = useNavigate();
   const location = useLocation();
-  const [bouncingItem, setBouncingItem] = useState(null);
-  const [reducingItem, setReducingItem] = useState(null);
-  const [isSlowMo, setIsSlowMo] = useState(false);
-
-  // Shift key detection for Slow-Motion (Secret macOS Feature)
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.key === "Shift") setIsSlowMo(true);
-    };
-    const handleKeyUp = (e) => {
-      if (e.key === "Shift") setIsSlowMo(false);
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    window.addEventListener("keyup", handleKeyUp);
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-      window.removeEventListener("keyup", handleKeyUp);
-    };
-  }, []);
 
   const menuItems = [
-    { id: "/", label: content.nav.home, icon: IconHome },
-    { id: "/servizi", label: content.nav.servizi, icon: IconServices },
-    { id: "/portfolio", label: content.nav.portfolio, icon: IconPortfolio },
-    { id: "/#contatti", label: content.nav.contatti, icon: IconContact },
+    { id: "/", label: content.nav.home },
+    { id: "/servizi", label: content.nav.servizi },
+    { id: "/portfolio", label: content.nav.portfolio },
+    { id: "/#contatti", label: content.nav.contatti },
   ];
 
-  const handleNavigate = (path, itemId) => {
-    // macOS Jumping / Bouncing App Launch on taskbar button
-    setBouncingItem(itemId);
-    setReducingItem(itemId);
-
+  const handleNavigate = (path) => {
     if (path === "/#contatti") {
       navigate({ pathname: "/", hash: "contatti" });
     } else {
       navigate(path);
     }
-
-    setTimeout(() => {
-      setBouncingItem(null);
-      setReducingItem(null);
-    }, isSlowMo ? 1200 : 180);
   };
 
   return (
-    <div className={`windows-taskbar modernized-taskbar macos-dock ${isSlowMo ? "slow-motion" : ""}`}>
-      <div className="taskbar-windows">
-        {menuItems.map((item) => {
-          const Icon = item.icon;
-          const isActive = item.id === "/#contatti" 
-            ? location.hash === "#contatti" 
-            : item.id === "/" 
-              ? location.pathname === "/" && location.hash !== "#contatti" 
-              : location.pathname === item.id;
-          const isBouncing = bouncingItem === item.id;
-          const isReducing = reducingItem === item.id;
+    <nav className="header-nav-links">
+      {menuItems.map((item) => {
+        const isActive = item.id === "/#contatti" 
+          ? location.hash === "#contatti" 
+          : item.id === "/" 
+            ? location.pathname === "/" && location.hash !== "#contatti" 
+            : location.pathname === item.id;
 
-          return (
-            <button
-              key={item.id}
-              className={`taskbar-window ${isActive ? "active" : ""} ${isBouncing ? "dock-jumping" : ""} ${isReducing ? "scale-reduce" : ""}`}
-              onClick={() => handleNavigate(item.id, item.id)}
-              title={isSlowMo ? "Shift attivo: Slow-Motion macOS!" : item.label}
-            >
-              <span className="taskbar-window-icon"><Icon /></span>
-              <span className="taskbar-window-label">{item.label}</span>
-            </button>
-          );
-        })}
-      </div>
-    </div>
+        return (
+          <button
+            key={item.id}
+            className={`header-nav-item ${isActive ? "active" : ""}`}
+            onClick={() => handleNavigate(item.id)}
+          >
+            {item.label}
+          </button>
+        );
+      })}
+    </nav>
   );
 }
 
@@ -669,22 +638,24 @@ function ScrollToHash() {
   return null;
 }
 
-function RoutedContent({ content, language, theme }) {
+function RoutedContent({ content, language, theme, onOpenPhotoModal }) {
   const location = useLocation();
 
   return (
     <main className="page-content route-page" key={location.key}>
       <Routes>
-        <Route path="/" element={<Home content={content} language={language} theme={theme} />} />
+        <Route path="/" element={<Home content={content} language={language} theme={theme} onOpenPhotoModal={onOpenPhotoModal} />} />
         <Route path="/servizi" element={<Servizi content={content} language={language} />} />
         <Route path="/portfolio" element={<Portfolio content={content} language={language} />} />
+        <Route path="/admin" element={<AdminPage />} />
       </Routes>
     </main>
   );
 }
 
-function Home({ content, language, theme }) {
+function Home({ content, language, theme, onOpenPhotoModal }) {
   const heroRef = useRef(null);
+  const navigate = useNavigate();
 
   // Load Storia images - use exact same pattern as Portfolio
   const storiaImages = Object.values(
@@ -780,8 +751,15 @@ function Home({ content, language, theme }) {
             theme === "dark"
               ? `linear-gradient(135deg, rgba(17, 17, 17, 0.55), rgba(17, 17, 17, 0.7)), url(${heroPhoto})`
               : `linear-gradient(135deg, rgba(8, 8, 8, 0.18), rgba(8, 8, 8, 0.34)), url(${lightHeroPhoto})`,
+          position: 'relative'
         }}
       >
+        <button 
+          className="secret-admin-btn"
+          onClick={() => navigate("/admin")}
+          aria-hidden="true"
+          title="Pannello Admin"
+        ></button>
         <div className="hero-inner">
           <div className="hero-content fade-in">
             <span className="section-kicker">{content.home.kicker}</span>
@@ -793,15 +771,54 @@ function Home({ content, language, theme }) {
             >
               {content.home.heroCta}
             </Link>
-            <a
-              href="https://wa.me/393246687521"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hero-print-box"
-            >
-              <span>📷</span>
-              <span>{content.home.heroPrint}</span>
-            </a>
+
+            {/* Split Pill Dual Button (WhatsApp | Email) with SVG icons */}
+            <div className="hero-split-send-pill">
+              <a
+                href="https://wa.me/393246687521"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="split-pill-btn split-left"
+              >
+                <svg
+                  className="split-svg-icon"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                >
+                  <path d="M17.472 14.382c-.297-.149-1.758-.868-2.03-.967-.273-.099-.472-.148-.67.15-.198.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"></path>
+                  <path d="M12.004 2.003c-5.514 0-9.997 4.483-9.997 9.997 0 1.762.462 3.484 1.34 5.001L2 22l5.117-1.341a9.96 9.96 0 0 0 4.887 1.271h.004c5.514 0 9.996-4.483 9.996-9.997 0-2.67-1.04-5.18-2.928-7.069a9.935 9.935 0 0 0-7.072-2.861zm0 18.187h-.003a8.166 8.166 0 0 1-4.166-1.14l-.299-.177-3.037.797.811-2.96-.194-.304a8.184 8.184 0 0 1-1.256-4.375c0-4.522 3.68-8.202 8.207-8.202a8.15 8.15 0 0 1 5.802 2.406 8.15 8.15 0 0 1 2.403 5.803c0 4.523-3.68 8.152-8.268 8.152z"></path>
+                </svg>
+                <span className="split-text">
+                  {language === "it" ? "INVIA FOTO SU WHATSAPP" : "SEND PHOTOS VIA WHATSAPP"}
+                </span>
+              </a>
+              <div className="split-divider"></div>
+              <button
+                type="button"
+                className="split-pill-btn split-right"
+                onClick={onOpenPhotoModal}
+              >
+                <svg
+                  className="split-svg-icon"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                  <polyline points="22,6 12,13 2,6"></polyline>
+                </svg>
+                <span className="split-text">
+                  {language === "it" ? "INVIA FOTO VIA EMAIL" : "SEND PHOTOS VIA EMAIL"}
+                </span>
+              </button>
+            </div>
           </div>
         </div>
         <a
@@ -1278,6 +1295,22 @@ const STAFF = {
 };
 
 function Servizi({ content, language }) {
+  const [dynamicServices, setDynamicServices] = useState(null);
+
+  useEffect(() => {
+    fetch('/api.php?action=getServices')
+      .then(res => res.json())
+      .then(data => {
+        if (data && data.it && data.en && data.it.length > 0) {
+          setDynamicServices(data);
+        }
+      })
+      .catch(err => {
+        const localS = localStorage.getItem('custom_services');
+        if (localS) setDynamicServices(JSON.parse(localS));
+      });
+  }, []);
+
   useEffect(() => {
     const elements = document.querySelectorAll(".fade-in");
     elements.forEach((el) => el.classList.remove("visible"));
@@ -1296,7 +1329,19 @@ function Servizi({ content, language }) {
     elements.forEach((el) => observer.observe(el));
 
     return () => observer.disconnect();
-  }, [language]);
+  }, [language, dynamicServices]);
+
+  const currentServicesRaw = dynamicServices ? (dynamicServices[language] || dynamicServices.it) : (SERVICES[language] || SERVICES.it);
+  
+  const iconMap = {
+    IconCamera, IconPrinter, IconCalendar, IconFilm, IconConvert, IconDrone, IconGift
+  };
+
+  const currentServices = currentServicesRaw.map(srv => ({
+    ...srv,
+    icon: typeof srv.iconName === 'string' ? iconMap[srv.iconName] : srv.icon,
+    subtitleNode: typeof srv.subtitle === 'string' && srv.subtitle.length > 0 ? <u>{srv.subtitle}</u> : srv.subtitle
+  }));
 
   return (
     <div className="services-page">
@@ -1313,7 +1358,7 @@ function Servizi({ content, language }) {
       </header>
 
       <div className="services-grid">
-        {(SERVICES[language] || SERVICES.it).map((service, idx) => {
+        {currentServices.map((service, idx) => {
           const Icon = service.icon;
           const BadgeIcon = service.badgeIcon;
           return (
@@ -1331,11 +1376,11 @@ function Servizi({ content, language }) {
               <div className="service-icon">
                 <Icon />
               </div>
-              <h3>{service.title}</h3>
-              {service.subtitle && (
-                <h4 className="service-subtitle">{service.subtitle}</h4>
+              <h3 className="service-title">{service.title}</h3>
+              {service.subtitleNode && (
+                <h4 className="service-subtitle">{service.subtitleNode}</h4>
               )}
-              <p>{service.description}</p>
+              <p className="service-desc">{service.description || service.desc}</p>
             </div>
           );
         })}
@@ -1345,39 +1390,36 @@ function Servizi({ content, language }) {
 }
 
 function Portfolio({ content, language }) {
-  // Load portfolio images. Use the source path for categorization because
-  // production asset URLs are hashed by Vite and no longer include the original
-  // folder name.
-  const imageModules = import.meta.glob(
-    "/src/assets/Photos/Portfolio/**/*.{jpg,jpeg,png}",
-    {
-      eager: true,
-      query: "?url",
-      import: "default",
-    },
-  );
-
-  const imageEntries = Object.entries(imageModules);
-
-  const newYork = imageEntries
-    .filter(([path]) => path.toLowerCase().includes("/newyork/"))
-    .map(([, url]) => url);
-  const eventi = imageEntries
-    .filter(([path]) => path.toLowerCase().includes("/matrimoni/"))
-    .map(([, url]) => url);
-  const allImages = [...newYork, ...eventi];
-
-  // Use lowercase identifiers for consistency
-  const [category, setCategory] = useState("newyork");
-  const imagesByCategory = {
-    newyork: newYork,
-    eventi,
-  };
-  const images = imagesByCategory[category]?.length
-    ? imagesByCategory[category]
-    : allImages;
-
+  const [savedCategories, setSavedCategories] = useState([]);
+  const [imagesByCategory, setImagesByCategory] = useState({});
+  const [category, setCategory] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
   const [selectedIndex, setSelectedIndex] = useState(null);
+
+  useEffect(() => {
+    fetch('/api.php?action=getPortfolio')
+      .then(res => res.json())
+      .then(data => {
+        if (data && data.categories) {
+          setSavedCategories(data.categories);
+          setImagesByCategory(data.imagesByCategory || {});
+          if (data.categories.length > 0) {
+            setCategory(data.categories[0].toLowerCase().replace(/\s+/g, ''));
+          }
+        }
+        setIsLoading(false);
+      })
+      .catch(err => {
+        console.error("Errore comunicazione con api.php (forse sei in locale senza PHP server?):", err);
+        // Fallback di sicurezza in caso di avvio locale
+        const fallbackCats = JSON.parse(localStorage.getItem('portfolio_categories')) || ['New York', 'Eventi'];
+        setSavedCategories(fallbackCats);
+        if (fallbackCats.length > 0) setCategory(fallbackCats[0].toLowerCase().replace(/\s+/g, ''));
+        setIsLoading(false);
+      });
+  }, []);
+
+  const images = imagesByCategory[category] || [];
 
   useEffect(() => {
     setSelectedIndex(null);
@@ -1409,30 +1451,32 @@ function Portfolio({ content, language }) {
 
   return (
     <div className="portfolio-page">
-      <div
-        className="page-backdrop"
-        style={{ backgroundImage: `url(${images[0]})` }}
-        aria-hidden="true"
-        key={category}
-      ></div>
+      {images.length > 0 && (
+        <div
+          className="page-backdrop"
+          style={{ backgroundImage: `url(${images[0]})` }}
+          aria-hidden="true"
+          key={category}
+        ></div>
+      )}
 
       <header className="portfolio-header fade-in visible">
         <span className="section-kicker">{content.portfolio.pageKicker}</span>
         <h1>{content.portfolio.pageTitle}</h1>
         <p className="portfolio-subtitle">{content.portfolio.pageText}</p>
         <div className="category-tabs">
-          <button
-            className={`tab-button ${category === "newyork" ? "active" : ""}`}
-            onClick={() => setCategory("newyork")}
-          >
-            {content.portfolio.newYork}
-          </button>
-          <button
-            className={`tab-button ${category === "eventi" ? "active" : ""}`}
-            onClick={() => setCategory("eventi")}
-          >
-            {content.portfolio.events}
-          </button>
+          {savedCategories.map((cat) => {
+            const catId = cat.toLowerCase().replace(/\s+/g, '');
+            return (
+              <button
+                key={catId}
+                className={`tab-button ${category === catId ? "active" : ""}`}
+                onClick={() => setCategory(catId)}
+              >
+                {cat}
+              </button>
+            );
+          })}
         </div>
         <p className="gallery-count">
           {images.length} {content.portfolio.countLabel}
@@ -1494,6 +1538,7 @@ function App() {
     if (typeof window === "undefined") return "dark";
     return window.localStorage.getItem("foto-extracolor-theme") || "dark";
   });
+  const [photoModalOpen, setPhotoModalOpen] = useState(false);
 
   useEffect(() => {
     document.documentElement.lang = language;
@@ -1514,13 +1559,20 @@ function App() {
           theme={theme}
           toggleTheme={toggleTheme}
           content={content}
+          onOpenPhotoModal={() => setPhotoModalOpen(true)}
         />
         <ScrollToHash />
         <PageTransition content={content} />
         <RoutedContent 
           content={content} 
           language={language} 
-          theme={theme} 
+          theme={theme}
+          onOpenPhotoModal={() => setPhotoModalOpen(true)}
+        />
+        <PhotoUploadModal
+          isOpen={photoModalOpen}
+          onClose={() => setPhotoModalOpen(false)}
+          language={language}
         />
       </div>
     </Router>

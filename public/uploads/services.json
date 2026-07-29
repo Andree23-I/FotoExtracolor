@@ -1,0 +1,84 @@
+{
+  "it": [
+    {
+      "id": "eventi",
+      "title": "Eventi",
+      "description": "Copertura fotografica completa del vostro evento, con la possibilita di realizzare anche il film dell'evento e spettacolari riprese aeree con il drone.",
+      "subtitle": "Foto, film e riprese aeree con drone",
+      "iconName": "IconCamera",
+      "featured": true
+    },
+    {
+      "id": "stampa",
+      "title": "Stampa Professionale",
+      "description": "Stampe fotografiche di alta qualità su carta professionale, per privati e attività commerciali.",
+      "iconName": "IconPrinter"
+    },
+    {
+      "id": "cerimonie",
+      "title": "Cerimonie",
+      "description": "Copertura fotografica di battesimi, comunioni e lauree, con foto curate per ogni momento speciale.",
+      "subtitle": "Foto, film e riprese aeree con drone",
+      "iconName": "IconCalendar"
+    },
+    {
+      "id": "pellicola",
+      "title": "Sviluppo Pellicola",
+      "description": "Sviluppo e stampa di rullini analogici, con la stessa cura artigianale di sempre.",
+      "iconName": "IconFilm"
+    },
+    {
+      "id": "vhs",
+      "title": "Conversione VHS in Digitale",
+      "description": "Trasferiamo i tuoi ricordi da VHS, mini-DV e altre videocassette a formato digitale.",
+      "iconName": "IconConvert"
+    },
+    {
+      "id": "gadget",
+      "title": "Gadget Personalizzati",
+      "description": "Cuscini, tazze, puzzle e tanto altro: trasforma le tue foto preferite in oggetti unici, tutto personalizzabile.",
+      "iconName": "IconGift"
+    }
+  ],
+  "en": [
+    {
+      "id": "eventi",
+      "title": "Events",
+      "description": "Complete photographic coverage of your event, with the possibility of creating an event film and spectacular aerial drone footage.",
+      "subtitle": "Photos, film and aerial drone footage",
+      "iconName": "IconCamera",
+      "featured": true
+    },
+    {
+      "id": "stampa",
+      "title": "Professional Printing",
+      "description": "High-quality photographic prints on professional paper for private clients and businesses.",
+      "iconName": "IconPrinter"
+    },
+    {
+      "id": "cerimonie",
+      "title": "Ceremonies",
+      "description": "Photography coverage for baptisms, communions, and graduations, with carefully captured moments throughout the day.",
+      "subtitle": "Photos, film and aerial drone footage",
+      "iconName": "IconCalendar"
+    },
+    {
+      "id": "pellicola",
+      "title": "Film Development",
+      "description": "Development and printing of analogue rolls with the same handcrafted care as ever.",
+      "iconName": "IconFilm"
+    },
+    {
+      "id": "vhs",
+      "title": "VHS to Digital Conversion",
+      "description": "We transfer your memories from VHS, mini-DV, and other tapes to digital format.",
+      "iconName": "IconConvert"
+    },
+    {
+      "id": "gadget",
+      "title": "Personalized Gifts",
+      "description": "Cushions, mugs, puzzles, and much more: turn your favorite photos into unique, fully customizable objects.",
+      "iconName": "IconGift"
+    }
+  ]
+}
