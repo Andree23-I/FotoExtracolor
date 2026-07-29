@@ -5,21 +5,92 @@ import {
   Route,
   Link,
   useLocation,
+  useNavigate,
 } from "react-router-dom";
 import "./index.css";
 import Lightbox from "./components/Lightbox.jsx";
 import Carousel from "./components/Carousel.jsx";
+import logoDark from "./assets/bianco-e-nero-senza-sfondo.svg";
+import logoLight from "./assets/nero-e-bianco-senza-sfondo.svg";
 import logo from "./assets/logo.jpeg";
 import heroPhoto from "./assets/scuro.jpeg";
 import lightHeroPhoto from "./assets/chiaro.jpeg";
 import atelierPhoto from "./assets/hero_background.jpg";
+
+// SVG Icon Components
+function IconHome(props) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      {...props}
+    >
+      <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+      <polyline points="9 22 9 12 15 12 15 22"></polyline>
+    </svg>
+  );
+}
+
+function IconServices(props) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      {...props}
+    >
+      <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
+    </svg>
+  );
+}
+
+function IconPortfolio(props) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      {...props}
+    >
+      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+      <circle cx="8.5" cy="8.5" r="1.5"></circle>
+      <polyline points="21 15 16 10 5 21"></polyline>
+    </svg>
+  );
+}
+
+function IconContact(props) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      {...props}
+    >
+      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+    </svg>
+  );
+}
 
 // Link to the Foto Extracolor Google reviews / business panel.
 const GOOGLE_REVIEWS_URL =
   "https://www.google.com/search?sca_esv=8661daf777ee415a&sxsrf=APpeQnuqdGqvpnmCq3QuvioBa8MfLRjH7A:1783171221322&q=foto+extracolor+salerno&si=APenkKnzv9m99ToiohAuzpadUwbOz34nZJ3j2Ukmo5XOUYWApuf1uLXXcDF8O4ULOaCSNh17t3bKbcvpQWNbpOSyRlTBOK-xLaxSaVEA6rn1eWVSvxkfsi0%3D&uds=AJ5uw1-SFE1ME9tIqnlIOIWp9Jjqv6n6AyWmrSP6hXkGDqBYBKIKI1-5RQwsdUk_mX9F5-2JY3kYmPV1OG4lUYodH3HP4E4qRRkkkIII1ai8R5VbwxEI55R8eufusxuIpSNZMsXYodiR&sa=X&ved=2ahUKEwiTruG5jrmVAxWCnP0HHbW4IhwQ3PALegQIHRAE&biw=1870&bih=919&dpr=1";
 const GOOGLE_RATING = 4.5;
 const GOOGLE_RATING_LABEL = "4,5";
-const PAGE_TRANSITION_DURATION = 1200;
+const PAGE_TRANSITION_DURATION = 300;
 
 function renderStoryText(text, ...highlightNames) {
   if (!text) return null;
@@ -52,6 +123,7 @@ const translations = {
       language: "Lingua",
       dark: "Scuro",
       light: "Chiaro",
+      menuTitle: "Menu Navigazione",
     },
     reviews: {
       title: "Recensioni Google",
@@ -111,6 +183,7 @@ const translations = {
       language: "Language",
       dark: "Dark",
       light: "Light",
+      menuTitle: "Navigation Menu",
     },
     reviews: {
       title: "Google Reviews",
@@ -237,84 +310,17 @@ function GoogleReviewsWidget({ className = "", content }) {
   );
 }
 
-function Navigation({ language, setLanguage, theme, toggleTheme, content }) {
-  const location = useLocation();
-  const pathname = location.pathname.replace(/\/+$/, "") || "/";
-  const isHome = pathname === "/" && !location.hash;
-  const isServizi = pathname === "/servizi";
-  const isPortfolio = pathname === "/portfolio";
-  const isContact = location.hash === "#contatti";
-  const [menuOpen, setMenuOpen] = useState(false);
+function HeaderTray({ language, setLanguage, theme, toggleTheme, content }) {
+  const [clock, setClock] = useState(new Date());
 
   useEffect(() => {
-    setMenuOpen(false);
-  }, [location.pathname, location.hash]);
-
-  useEffect(() => {
-    document.body.classList.toggle("nav-open", menuOpen);
-    return () => document.body.classList.remove("nav-open");
-  }, [menuOpen]);
-
-  const closeMenu = () => setMenuOpen(false);
-  const goToTop = () => {
-    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
-    closeMenu();
-  };
-  const goToContact = () => {
-    closeMenu();
-    if (isContact) {
-      document
-        .getElementById("contatti")
-        ?.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-  };
+    const timer = setInterval(() => setClock(new Date()), 1000);
+    return () => clearInterval(timer);
+  }, []);
 
   return (
-    <nav className="navbar">
-      <div className="logo">
-        <Link
-          to="/"
-          style={{ color: "inherit", textDecoration: "none" }}
-          onClick={goToTop}
-        >
-          <img src={logo} alt="Foto Extracolor" className="logo-image" />
-        </Link>
-      </div>
-      <ul className={`nav-links ${menuOpen ? "open" : ""}`}>
-        <li>
-          <Link to="/" className={isHome ? "active" : ""} onClick={goToTop}>
-            {content.nav.home}
-          </Link>
-        </li>
-        <li>
-          <Link
-            to="/servizi"
-            className={isServizi ? "active" : ""}
-            onClick={goToTop}
-          >
-            {content.nav.servizi}
-          </Link>
-        </li>
-        <li>
-          <Link
-            to="/portfolio"
-            className={isPortfolio ? "active" : ""}
-            onClick={goToTop}
-          >
-            {content.nav.portfolio}
-          </Link>
-        </li>
-        <li>
-          <Link
-            to={{ pathname: "/", hash: "#contatti" }}
-            className={isContact ? "active" : ""}
-            onClick={goToContact}
-          >
-            {content.nav.contatti}
-          </Link>
-        </li>
-      </ul>
-      <div className="nav-controls">
+    <div className="header-right-tray">
+      <div className="tray-controls">
         <div className="lang-switch" role="group" aria-label={content.nav.language}>
           <button
             type="button"
@@ -338,21 +344,196 @@ function Navigation({ language, setLanguage, theme, toggleTheme, content }) {
           aria-label={theme === "dark" ? content.nav.light : content.nav.dark}
         >
           <span>{theme === "dark" ? "☀︎" : "☾"}</span>
-          <span>{theme === "dark" ? content.nav.light : content.nav.dark}</span>
         </button>
       </div>
-      <button
-        type="button"
-        className={`nav-toggle ${menuOpen ? "open" : ""}`}
-        onClick={() => setMenuOpen((open) => !open)}
-        aria-label={menuOpen ? "Chiudi il menu" : "Apri il menu"}
-        aria-expanded={menuOpen}
-      >
-        <span></span>
-        <span></span>
-        <span></span>
-      </button>
-    </nav>
+      <div className="tray-clock">
+        <div className="clock-time">
+          {clock.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+        </div>
+        <div className="clock-date">
+          {clock.toLocaleDateString([], { day: '2-digit', month: '2-digit', year: 'numeric' })}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function TopHeaderBar({ language, setLanguage, theme, toggleTheme, content }) {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const menuItems = [
+    { id: "/", label: content.nav.home, icon: IconHome },
+    { id: "/servizi", label: content.nav.servizi, icon: IconServices },
+    { id: "/portfolio", label: content.nav.portfolio, icon: IconPortfolio },
+    { id: "/#contatti", label: content.nav.contatti, icon: IconContact },
+  ];
+
+  const handleMobileNavigate = (path) => {
+    setMobileMenuOpen(false);
+    if (path === "/#contatti") {
+      navigate({ pathname: "/", hash: "contatti" });
+    } else {
+      navigate(path);
+    }
+  };
+
+  return (
+    <header className="site-header-top">
+      <div className="header-brand" onClick={() => navigate("/")} role="button" tabIndex={0}>
+        <div className="brand-logo-wrapper">
+          <img src={logo} alt="Foto Extracolor Logo" className="header-logo-img" />
+          <div className="logo-glow-ring"></div>
+        </div>
+        <div className="brand-titles">
+          <span className="brand-name">FOTO EXTRACOLOR</span>
+        </div>
+      </div>
+
+      {/* Desktop Taskbar (Hidden on mobile via CSS) */}
+      <div className="header-center-taskbar">
+        <WindowsTaskbar content={content} />
+      </div>
+
+      <div className="header-right-wrapper">
+        <HeaderTray
+          language={language}
+          setLanguage={setLanguage}
+          theme={theme}
+          toggleTheme={toggleTheme}
+          content={content}
+        />
+
+        {/* Mobile Hamburger Menu Toggle Button */}
+        <button
+          type="button"
+          className={`mobile-menu-toggle ${mobileMenuOpen ? "open" : ""}`}
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          aria-label="Toggle navigation menu"
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+
+      {/* Mobile Slide-down Navigation Overlay */}
+      {mobileMenuOpen && (
+        <div className="mobile-nav-overlay" onClick={() => setMobileMenuOpen(false)}>
+          <nav className="mobile-nav-menu" onClick={(e) => e.stopPropagation()}>
+            <div className="mobile-nav-header">
+              <span className="mobile-nav-title">{content.nav.menuTitle}</span>
+              <button
+                type="button"
+                className="mobile-nav-close"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                ✕
+              </button>
+            </div>
+            <div className="mobile-nav-links">
+              {menuItems.map((item) => {
+                const Icon = item.icon;
+                const isActive = item.id === "/#contatti"
+                  ? location.hash === "#contatti"
+                  : item.id === "/"
+                    ? location.pathname === "/" && location.hash !== "#contatti"
+                    : location.pathname === item.id;
+
+                return (
+                  <button
+                    key={item.id}
+                    className={`mobile-nav-item ${isActive ? "active" : ""}`}
+                    onClick={() => handleMobileNavigate(item.id)}
+                  >
+                    <span className="mobile-nav-icon"><Icon /></span>
+                    <span className="mobile-nav-label">{item.label}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </nav>
+        </div>
+      )}
+    </header>
+  );
+}
+
+function WindowsTaskbar({ content }) {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [bouncingItem, setBouncingItem] = useState(null);
+  const [reducingItem, setReducingItem] = useState(null);
+  const [isSlowMo, setIsSlowMo] = useState(false);
+
+  // Shift key detection for Slow-Motion (Secret macOS Feature)
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === "Shift") setIsSlowMo(true);
+    };
+    const handleKeyUp = (e) => {
+      if (e.key === "Shift") setIsSlowMo(false);
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("keyup", handleKeyUp);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("keyup", handleKeyUp);
+    };
+  }, []);
+
+  const menuItems = [
+    { id: "/", label: content.nav.home, icon: IconHome },
+    { id: "/servizi", label: content.nav.servizi, icon: IconServices },
+    { id: "/portfolio", label: content.nav.portfolio, icon: IconPortfolio },
+    { id: "/#contatti", label: content.nav.contatti, icon: IconContact },
+  ];
+
+  const handleNavigate = (path, itemId) => {
+    // macOS Jumping / Bouncing App Launch on taskbar button
+    setBouncingItem(itemId);
+    setReducingItem(itemId);
+
+    if (path === "/#contatti") {
+      navigate({ pathname: "/", hash: "contatti" });
+    } else {
+      navigate(path);
+    }
+
+    setTimeout(() => {
+      setBouncingItem(null);
+      setReducingItem(null);
+    }, isSlowMo ? 1200 : 180);
+  };
+
+  return (
+    <div className={`windows-taskbar modernized-taskbar macos-dock ${isSlowMo ? "slow-motion" : ""}`}>
+      <div className="taskbar-windows">
+        {menuItems.map((item) => {
+          const Icon = item.icon;
+          const isActive = item.id === "/#contatti" 
+            ? location.hash === "#contatti" 
+            : item.id === "/" 
+              ? location.pathname === "/" && location.hash !== "#contatti" 
+              : location.pathname === item.id;
+          const isBouncing = bouncingItem === item.id;
+          const isReducing = reducingItem === item.id;
+
+          return (
+            <button
+              key={item.id}
+              className={`taskbar-window ${isActive ? "active" : ""} ${isBouncing ? "dock-jumping" : ""} ${isReducing ? "scale-reduce" : ""}`}
+              onClick={() => handleNavigate(item.id, item.id)}
+              title={isSlowMo ? "Shift attivo: Slow-Motion macOS!" : item.label}
+            >
+              <span className="taskbar-window-icon"><Icon /></span>
+              <span className="taskbar-window-label">{item.label}</span>
+            </button>
+          );
+        })}
+      </div>
+    </div>
   );
 }
 
@@ -821,7 +1002,6 @@ function Home({ content, language, theme }) {
                   </svg>
                   <span>@fotoextracolor</span>
                 </a>
-                
               </div>
             </div>
           </div>
@@ -829,12 +1009,12 @@ function Home({ content, language, theme }) {
           <div className="contact-right">
             <div className="map-container fade-in-right stagger-1">
               <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3023.2394982647715!2d14.7766!3d40.6781!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x133bc25c9b19e2bb%3A0x8e8334812a23075f!2sVia%20Raffaele%20Ricci%2C%2062%2C%2084126%20Salerno%20SA%2C%20Italy!5e0!3m2!1sen!2sus!4v1717171717171!5m2!1sen!2sus"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d12105.87064206921!2d14.780441522598274!3d40.66366362039965!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x133bc2f54d7792af%3A0x53c81e6da62d1a7!2sFoto%20Extracolor!5e0!3m2!1sit!2sit!4v1785339158269!5m2!1sit!2sit"
                 width="100%"
                 height="350"
                 style={{ border: 0, borderRadius: "8px", display: "block" }}
                 allowFullScreen=""
-                loading="lazy"
+                loading="eager"
                 referrerPolicy="no-referrer-when-downgrade"
                 title={content.home.mapTitle}
               ></iframe>
@@ -1327,8 +1507,8 @@ function App() {
 
   return (
     <Router basename={import.meta.env.BASE_URL}>
-      <div className="app-container">
-        <Navigation
+      <div className="app-container taskbar-style">
+        <TopHeaderBar
           language={language}
           setLanguage={setLanguage}
           theme={theme}
@@ -1337,17 +1517,11 @@ function App() {
         />
         <ScrollToHash />
         <PageTransition content={content} />
-        <RoutedContent content={content} language={language} theme={theme} />
-        <footer
-          className="footer"
-          style={{
-            backgroundImage: `linear-gradient(135deg, ${theme === "dark" ? "rgba(10, 10, 10, 0.95)" : "rgba(245, 245, 245, 0.95)"}, ${theme === "dark" ? "rgba(10, 10, 10, 0.8)" : "rgba(225, 225, 225, 0.9)"}), url(${atelierPhoto})`,
-          }}
-        >
-          <p>
-            &copy; {new Date().getFullYear()} Foto Extracolor. {content.footer.rights}
-          </p>
-        </footer>
+        <RoutedContent 
+          content={content} 
+          language={language} 
+          theme={theme} 
+        />
       </div>
     </Router>
   );

@@ -57,6 +57,448 @@ html {
     overflow: clip;
 }
 
+/* Top Header Bar */
+.site-header-top {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 64px;
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1.5rem;
+    background: rgba(12, 12, 12, 0.85);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 4px 25px rgba(0, 0, 0, 0.4);
+    transition: all 0.3s ease;
+}
+
+:root[data-theme="light"] .site-header-top {
+    background: rgba(255, 255, 255, 0.9);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+}
+
+.header-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    cursor: pointer;
+    user-select: none;
+    z-index: 2;
+}
+
+.header-center-taskbar {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+}
+
+.brand-logo-wrapper {
+    position: relative;
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    padding: 2px;
+    background: linear-gradient(135deg, var(--primary-color), rgba(255, 215, 0, 0.3));
+    box-shadow: 0 0 12px rgba(212, 175, 55, 0.3);
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s ease;
+}
+
+.brand-logo-wrapper:hover {
+    transform: scale(1.08) rotate(-2deg);
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.6);
+}
+
+.header-logo-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.logo-glow-ring {
+    position: absolute;
+    inset: -3px;
+    border-radius: 12px;
+    background: conic-gradient(from 0deg, transparent 0%, var(--primary-color) 50%, transparent 100%);
+    opacity: 0.6;
+    animation: spinGlow 4s linear infinite;
+    pointer-events: none;
+    z-index: -1;
+}
+
+@keyframes spinGlow {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.brand-titles {
+    display: flex;
+    flex-direction: column;
+}
+
+.brand-name {
+    font-family: var(--font-serif);
+    font-size: 1.15rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--text-primary);
+    background: linear-gradient(135deg, #fff 30%, var(--primary-color) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+:root[data-theme="light"] .brand-name {
+    background: linear-gradient(135deg, #111 30%, #b8860b 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.brand-tagline {
+    font-size: 0.65rem;
+    letter-spacing: 0.18em;
+    color: var(--primary-color);
+    font-weight: 600;
+    opacity: 0.9;
+}
+
+.header-right-tray {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    z-index: 2;
+}
+
+/* Adjust page content for top header */
+.app-container.taskbar-style {
+    padding-top: 64px;
+    padding-bottom: 0px;
+}
+
+/* Modernized macOS Dock Taskbar in Header with Rich Background Effects */
+.windows-taskbar.modernized-taskbar.macos-dock {
+    position: relative;
+    bottom: auto;
+    left: auto;
+    transform: none;
+    width: auto;
+    height: 58px;
+    background: linear-gradient(135deg, rgba(30, 30, 35, 0.65), rgba(15, 15, 20, 0.8));
+    backdrop-filter: blur(24px) saturate(220%);
+    -webkit-backdrop-filter: blur(24px) saturate(220%);
+    border: 1px solid rgba(255, 215, 0, 0.35);
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    padding: 0.4rem 1rem;
+    gap: 0.75rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45), inset 0 1px 2px rgba(255, 255, 255, 0.2), 0 0 15px rgba(212, 175, 55, 0.15);
+    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+    overflow: hidden;
+}
+
+/* Background Animated Aurora Glow Effect */
+.windows-taskbar.modernized-taskbar.macos-dock::before {
+    content: "";
+    position: absolute;
+    inset: -2px;
+    border-radius: 18px;
+    background: linear-gradient(90deg, rgba(212, 175, 55, 0.3), rgba(255, 215, 0, 0.1), rgba(184, 134, 11, 0.4), rgba(212, 175, 55, 0.3));
+    background-size: 300% 100%;
+    animation: dockAuroraFlow 6s linear infinite;
+    z-index: -2;
+    opacity: 0.6;
+    transition: opacity 0.4s ease;
+}
+
+@keyframes dockAuroraFlow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+.windows-taskbar.modernized-taskbar.macos-dock:hover {
+    background: linear-gradient(135deg, rgba(40, 40, 48, 0.78), rgba(20, 20, 28, 0.9));
+    border-color: rgba(212, 175, 55, 0.55);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6), 0 0 25px rgba(212, 175, 55, 0.35), inset 0 1px 2px rgba(255, 255, 255, 0.3);
+}
+
+.windows-taskbar.modernized-taskbar.macos-dock:hover::before {
+    opacity: 1;
+}
+
+:root[data-theme="light"] .windows-taskbar.modernized-taskbar.macos-dock {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.85), rgba(240, 240, 245, 0.95));
+    border: 1px solid rgba(212, 175, 55, 0.35);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08), inset 0 1px 2px rgba(255, 255, 255, 0.8), 0 0 15px rgba(212, 175, 55, 0.2);
+}
+
+/* Taskbar Windows macOS Dock Style */
+.taskbar-windows {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex: 1;
+}
+
+/* macOS Magnification and bounce animation on hover & click */
+.taskbar-window {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.55rem 1.25rem;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    color: var(--text-primary);
+    cursor: pointer;
+    overflow: hidden;
+    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+    font-size: 0.9rem;
+    font-weight: 500;
+    will-change: transform;
+}
+
+:root[data-theme="light"] .taskbar-window {
+    background: rgba(0, 0, 0, 0.03);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    color: #333;
+}
+
+.taskbar-window:hover {
+    background: rgba(255, 255, 255, 0.16);
+    border-color: rgba(212, 175, 55, 0.5);
+    transform: translateY(-4px) scale(1.12);
+    box-shadow: 0 10px 25px rgba(212, 175, 55, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.3);
+    z-index: 10;
+}
+
+:root[data-theme="light"] .taskbar-window:hover {
+    background: rgba(0, 0, 0, 0.07);
+    border-color: rgba(184, 134, 11, 0.4);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+/* Neighboring item proximity scaling effect */
+.taskbar-window:hover + .taskbar-window,
+.taskbar-window:has(+ .taskbar-window:hover) {
+    transform: translateY(-2px) scale(1.04);
+}
+
+/* macOS App Launch Jumping Bounce Animation (Il Saltello Iniziale) */
+.taskbar-window.dock-jumping {
+    animation: macOsAppJump 0.45s cubic-bezier(0.28, 0.84, 0.42, 1) infinite alternate;
+}
+
+.macos-slow-mo .taskbar-window.dock-jumping {
+    animation-duration: 1.8s;
+}
+
+@keyframes macOsAppJump {
+    0% {
+        transform: translateY(0px) scale(1);
+    }
+    100% {
+        transform: translateY(-16px) scale(1.15);
+        box-shadow: 0 14px 28px rgba(212, 175, 55, 0.4);
+    }
+}
+
+/* macOS Reduction Effects on Taskbar Items: Genie vs Scale */
+.taskbar-window.genie-reduce {
+    animation: taskbarGenieEffect 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* macOS Taskbar Button Press Ripple & Spring Pulse Animation */
+.taskbar-window.scale-reduce {
+    animation: taskbarPressPulse 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes taskbarPressPulse {
+    0% {
+        transform: scale(1);
+    }
+    30% {
+        transform: scale(0.85) translateY(2px);
+        filter: brightness(1.3);
+    }
+    60% {
+        transform: scale(1.12) translateY(-3px);
+        filter: brightness(1.1);
+    }
+    100% {
+        transform: scale(1) translateY(0);
+        filter: brightness(1);
+    }
+}
+
+/* Light Theme Header & Taskbar Dark Orange Accent Overrides */
+:root[data-theme="light"] .site-header-top {
+    border-bottom: 1px solid rgba(225, 90, 0, 0.2);
+}
+
+:root[data-theme="light"] .logo-glow-ring {
+    border-color: rgba(225, 90, 0, 0.7);
+    box-shadow: 0 0 15px rgba(225, 90, 0, 0.5), inset 0 0 10px rgba(225, 90, 0, 0.3);
+}
+
+:root[data-theme="light"] .header-title {
+    background: linear-gradient(135deg, #111111 0%, #d85000 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+:root[data-theme="light"] .windows-taskbar.modernized-taskbar.macos-dock {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.92), rgba(248, 242, 238, 0.96));
+    border: 1px solid rgba(225, 90, 0, 0.4);
+    box-shadow: 0 8px 30px rgba(225, 90, 0, 0.12), inset 0 1px 2px rgba(255, 255, 255, 0.9), 0 0 15px rgba(225, 90, 0, 0.2);
+}
+
+:root[data-theme="light"] .windows-taskbar.modernized-taskbar.macos-dock:hover {
+    border-color: rgba(225, 90, 0, 0.75);
+    box-shadow: 0 12px 35px rgba(225, 90, 0, 0.22), 0 0 25px rgba(225, 90, 0, 0.35);
+}
+
+:root[data-theme="light"] .taskbar-window {
+    background: rgba(225, 90, 0, 0.05);
+    border: 1px solid rgba(225, 90, 0, 0.15);
+    color: #1a1a1a;
+}
+
+:root[data-theme="light"] .taskbar-window:hover {
+    background: rgba(225, 90, 0, 0.12);
+    border-color: rgba(225, 90, 0, 0.6);
+    color: #000;
+    box-shadow: 0 8px 20px rgba(225, 90, 0, 0.25);
+}
+
+:root[data-theme="light"] .taskbar-window.active {
+    background: linear-gradient(135deg, rgba(225, 90, 0, 0.22), rgba(255, 120, 30, 0.15));
+    border-color: rgba(225, 90, 0, 0.7);
+    color: #d84500;
+    font-weight: 700;
+    box-shadow: 0 4px 16px rgba(225, 90, 0, 0.3);
+}
+
+:root[data-theme="light"] .taskbar-window.active::after {
+    background: #d84500;
+    box-shadow: 0 0 8px #d84500;
+}
+
+:root[data-theme="light"] .lang-switch {
+    background: rgba(225, 90, 0, 0.06);
+    border-color: rgba(225, 90, 0, 0.35);
+}
+
+:root[data-theme="light"] .lang-switch:hover {
+    border-color: rgba(225, 90, 0, 0.7);
+    box-shadow: 0 4px 20px rgba(225, 90, 0, 0.25);
+}
+
+:root[data-theme="light"] .lang-switch button.active {
+    background: linear-gradient(135deg, #e15a00, #ff7a20);
+    color: #ffffff;
+    box-shadow: 0 2px 10px rgba(225, 90, 0, 0.4);
+}
+
+:root[data-theme="light"] .theme-toggle {
+    border-color: rgba(225, 90, 0, 0.35);
+    background: rgba(225, 90, 0, 0.06);
+    color: #e15a00;
+}
+
+:root[data-theme="light"] .theme-toggle:hover {
+    background: linear-gradient(135deg, rgba(225, 90, 0, 0.25), rgba(255, 120, 30, 0.15));
+    border-color: rgba(225, 90, 0, 0.8);
+    box-shadow: 0 0 20px rgba(225, 90, 0, 0.4);
+}
+
+:root[data-theme="light"] .tray-clock {
+    background: transparent;
+    border-color: rgba(225, 90, 0, 0.3);
+    box-shadow: none;
+}
+
+:root[data-theme="light"] .tray-clock:hover {
+    background: rgba(225, 90, 0, 0.05);
+    border-color: rgba(225, 90, 0, 0.6);
+    box-shadow: 0 4px 15px rgba(225, 90, 0, 0.15);
+}
+
+:root[data-theme="light"] .clock-time {
+    background: linear-gradient(135deg, #111111 0%, #d84500 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+:root[data-theme="light"] .clock-date {
+    color: #d84500;
+}
+
+:root[data-theme="light"] .start-button,
+:root[data-theme="light"] .taskbar-window {
+    background: rgba(0, 0, 0, 0.05);
+    border-color: rgba(0, 0, 0, 0.1);
+    color: #000;
+}
+
+:root[data-theme="light"] .start-button:hover,
+:root[data-theme="light"] .taskbar-window:hover {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+:root[data-theme="light"] .taskbar-window.active {
+    background: rgba(212, 175, 55, 0.2);
+    border-color: rgba(212, 175, 55, 0.4);
+}
+
+:root[data-theme="light"] .start-menu {
+    background: rgba(255, 255, 255, 0.98);
+    border-color: rgba(0, 0, 0, 0.1);
+}
+
+:root[data-theme="light"] .start-menu-header {
+    background: rgba(0, 0, 0, 0.03);
+    border-bottom-color: rgba(0, 0, 0, 0.1);
+}
+
+:root[data-theme="light"] .start-menu-title {
+    color: #000;
+}
+
+:root[data-theme="light"] .start-menu-item {
+    color: #000;
+}
+
+:root[data-theme="light"] .start-menu-item:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+:root[data-theme="light"] .start-menu-item.active {
+    background: rgba(212, 175, 55, 0.15);
+}
+
+
+
+:root[data-theme="light"] .clock-time,
+:root[data-theme="light"] .clock-date {
+    color: #000;
+}
+
+:root[data-theme="light"] .clock-date {
+    color: rgba(0, 0, 0, 0.6);
+}
+
 .page-content {
     flex: 1 0 auto;
 }
@@ -65,7 +507,7 @@ html {
     transform-style: preserve-3d;
     transform-origin: 50% 50%;
     will-change: opacity, transform;
-    animation: routePageEnter 0.8s cubic-bezier(0.2, 0.72, 0.18, 1) both;
+    animation: routePageEnter 0.25s cubic-bezier(0.2, 0.72, 0.18, 1) both;
 }
 
 @keyframes routePageEnter {
@@ -2382,4 +2824,259 @@ body.nav-open {
     .contact-icons {
         flex-wrap: wrap;
     }
+}
+
+/* Mobile Navigation Hamburger Menu & Responsive Overrides */
+.header-right-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.mobile-menu-toggle {
+    display: none;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 38px;
+    height: 38px;
+    padding: 9px 8px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 215, 0, 0.3);
+    border-radius: 10px;
+    cursor: pointer;
+    backdrop-filter: blur(12px);
+    transition: all 0.3s ease;
+}
+
+:root[data-theme="light"] .mobile-menu-toggle {
+    background: rgba(225, 90, 0, 0.06);
+    border-color: rgba(225, 90, 0, 0.35);
+}
+
+.mobile-menu-toggle span {
+    display: block;
+    width: 100%;
+    height: 2px;
+    background-color: var(--primary-color);
+    border-radius: 2px;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+:root[data-theme="light"] .mobile-menu-toggle span {
+    background-color: #d84500;
+}
+
+.mobile-menu-toggle.open span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+}
+
+.mobile-menu-toggle.open span:nth-child(2) {
+    opacity: 0;
+    transform: scaleX(0);
+}
+
+.mobile-menu-toggle.open span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+}
+
+/* Hide taskbar on mobile screens <= 900px and show hamburger menu */
+@media (max-width: 900px) {
+    .site-header-top {
+        padding: 0 0.75rem;
+    }
+
+    .header-center-taskbar {
+        display: none !important;
+    }
+
+    .header-right-wrapper {
+        gap: 0.4rem;
+        flex-wrap: nowrap;
+        align-items: center;
+    }
+
+    .tray-controls {
+        gap: 0.4rem;
+        flex-wrap: nowrap;
+        align-items: center;
+    }
+
+    .lang-switch {
+        height: 34px;
+        padding: 2px;
+        display: inline-flex;
+        align-items: center;
+        box-sizing: border-box;
+    }
+
+    .lang-switch button {
+        height: 28px;
+        padding: 0 0.55rem;
+        font-size: 0.75rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .theme-toggle {
+        width: 34px;
+        height: 34px;
+        font-size: 0.95rem;
+        flex-shrink: 0;
+        box-sizing: border-box;
+    }
+
+    .mobile-menu-toggle {
+        display: flex;
+        flex-shrink: 0;
+        width: 34px;
+        height: 34px;
+        padding: 8px 6px;
+        box-sizing: border-box;
+    }
+
+    .tray-clock {
+        display: none;
+    }
+
+    .brand-name {
+        font-size: 0.9rem;
+        letter-spacing: 0.02em;
+    }
+
+    .brand-logo-wrapper {
+        width: 36px;
+        height: 36px;
+    }
+}
+
+/* Mobile Slide-Down Nav Drawer Overlay */
+.mobile-nav-overlay {
+    position: fixed;
+    top: 64px;
+    left: 0;
+    width: 100vw;
+    height: calc(100vh - 64px);
+    height: calc(100svh - 64px);
+    background: rgba(0, 0, 0, 0.65);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    z-index: 999;
+    animation: fadeInOverlay 0.25s ease-out both;
+}
+
+@keyframes fadeInOverlay {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.mobile-nav-menu {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: linear-gradient(180deg, rgba(20, 20, 25, 0.98), rgba(12, 12, 16, 0.98));
+    border-bottom: 2px solid rgba(255, 215, 0, 0.3);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+    padding: 1.25rem 1.5rem 1.75rem;
+    animation: slideDownMenu 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+:root[data-theme="light"] .mobile-nav-menu {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(245, 240, 235, 0.98));
+    border-bottom-color: rgba(225, 90, 0, 0.4);
+    box-shadow: 0 15px 35px rgba(225, 90, 0, 0.15);
+}
+
+@keyframes slideDownMenu {
+    from { transform: translateY(-20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.mobile-nav-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+:root[data-theme="light"] .mobile-nav-header {
+    border-bottom-color: rgba(225, 90, 0, 0.15);
+}
+
+.mobile-nav-title {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+:root[data-theme="light"] .mobile-nav-title {
+    color: #d84500;
+}
+
+.mobile-nav-close {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0.2rem 0.5rem;
+}
+
+.mobile-nav-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.mobile-nav-item {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 0.85rem 1.25rem;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    color: var(--text-primary);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+:root[data-theme="light"] .mobile-nav-item {
+    background: rgba(225, 90, 0, 0.04);
+    border-color: rgba(225, 90, 0, 0.15);
+    color: #1f1f1f;
+}
+
+.mobile-nav-item:hover,
+.mobile-nav-item.active {
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.25), rgba(255, 215, 0, 0.1));
+    border-color: rgba(212, 175, 55, 0.6);
+    color: var(--primary-color);
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2);
+}
+
+:root[data-theme="light"] .mobile-nav-item:hover,
+:root[data-theme="light"] .mobile-nav-item.active {
+    background: linear-gradient(135deg, rgba(225, 90, 0, 0.2), rgba(255, 120, 30, 0.1));
+    border-color: rgba(225, 90, 0, 0.7);
+    color: #d84500;
+    box-shadow: 0 4px 15px rgba(225, 90, 0, 0.2);
+}
+
+.mobile-nav-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mobile-nav-icon svg {
+    width: 20px;
+    height: 20px;
 }
