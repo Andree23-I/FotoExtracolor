@@ -3962,3 +3962,15 @@ body.nav-open {
         height: 100%;
     }
 }
+
+/* Custom View Transition for Theme Toggle */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+::view-transition-new(root) {
+  z-index: 1;
+}
+

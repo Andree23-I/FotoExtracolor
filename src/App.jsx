@@ -656,6 +656,7 @@ function RoutedContent({ content, language, theme, onOpenPhotoModal }) {
 function Home({ content, language, theme, onOpenPhotoModal }) {
   const heroRef = useRef(null);
   const navigate = useNavigate();
+  const dynamicServices = useDynamicServices();
 
   // Load Storia images - use exact same pattern as Portfolio
   const storiaImages = Object.values(
@@ -698,7 +699,7 @@ function Home({ content, language, theme, onOpenPhotoModal }) {
     elements.forEach((el) => observer.observe(el));
 
     return () => observer.disconnect();
-  }, [language]);
+  }, [language, dynamicServices]);
 
   // Load staff avatars from either /src/assets/staff or existing
   // /src/assets/Photos/Staff — filenames should include the first name
@@ -821,14 +822,16 @@ function Home({ content, language, theme, onOpenPhotoModal }) {
             </div>
           </div>
         </div>
-        <a
-          href="#storia"
-          className="scroll-indicator"
-          aria-label={content.home.scrollLabel}
-          onClick={handleHeroScroll}
-        >
-          <span></span>
-        </a>
+        {theme !== "dark" && (
+          <a
+            href="#storia"
+            className="scroll-indicator"
+            aria-label={content.home.scrollLabel}
+            onClick={handleHeroScroll}
+          >
+            <span></span>
+          </a>
+        )}
       </header>
 
       <section id="storia" className="story-section">
@@ -851,20 +854,28 @@ function Home({ content, language, theme, onOpenPhotoModal }) {
           {content.home.servicesText}
         </p>
         <div className="services-preview-grid">
-          {SERVICES[language].map((service, idx) => {
-            const Icon = service.icon;
-            return (
-              <div
-                className={`service-chip fade-in-scale stagger-${(idx % 5) + 1}`}
-                key={service.title}
-              >
-                <span className="service-chip-icon">
-                  <Icon />
-                </span>
-                <span>{service.title}</span>
-              </div>
-            );
-          })}
+          {(() => {
+            const currentServicesRaw = dynamicServices ? (dynamicServices[language] || dynamicServices.it) : (SERVICES[language] || SERVICES.it);
+            const currentServices = currentServicesRaw.map(srv => ({
+              ...srv,
+              icon: typeof srv.iconName === 'string' ? (iconMap[srv.iconName] || IconCamera) : (srv.icon || IconCamera)
+            }));
+            
+            return currentServices.map((service, idx) => {
+              const Icon = service.icon;
+              return (
+                <div
+                  className={`service-chip fade-in-scale stagger-${(idx % 5) + 1}`}
+                  key={service.id || idx}
+                >
+                  <span className="service-chip-icon">
+                    <Icon />
+                  </span>
+                  <span>{service.title}</span>
+                </div>
+              );
+            });
+          })()}
         </div>
         <Link to="/servizi" className="btn-secondary fade-in">
           {content.home.servicesCta}
@@ -1294,7 +1305,11 @@ const STAFF = {
   en: [{ name: "Annalisa Capasso" }, { name: "Chiara Capasso" }, { name: "Carmen Capasso" }],
 };
 
-function Servizi({ content, language }) {
+export const iconMap = {
+  IconCamera, IconPrinter, IconCalendar, IconFilm, IconConvert, IconDrone, IconGift
+};
+
+export function useDynamicServices() {
   const [dynamicServices, setDynamicServices] = useState(null);
 
   useEffect(() => {
@@ -1310,6 +1325,12 @@ function Servizi({ content, language }) {
         if (localS) setDynamicServices(JSON.parse(localS));
       });
   }, []);
+
+  return dynamicServices;
+}
+
+function Servizi({ content, language }) {
+  const dynamicServices = useDynamicServices();
 
   useEffect(() => {
     const elements = document.querySelectorAll(".fade-in");
@@ -1333,13 +1354,9 @@ function Servizi({ content, language }) {
 
   const currentServicesRaw = dynamicServices ? (dynamicServices[language] || dynamicServices.it) : (SERVICES[language] || SERVICES.it);
   
-  const iconMap = {
-    IconCamera, IconPrinter, IconCalendar, IconFilm, IconConvert, IconDrone, IconGift
-  };
-
   const currentServices = currentServicesRaw.map(srv => ({
     ...srv,
-    icon: typeof srv.iconName === 'string' ? iconMap[srv.iconName] : srv.icon,
+    icon: typeof srv.iconName === 'string' ? (iconMap[srv.iconName] || IconCamera) : (srv.icon || IconCamera),
     subtitleNode: typeof srv.subtitle === 'string' && srv.subtitle.length > 0 ? <u>{srv.subtitle}</u> : srv.subtitle
   }));
 
@@ -1547,7 +1564,42 @@ function App() {
     window.localStorage.setItem("foto-extracolor-theme", theme);
   }, [language, theme]);
 
-  const toggleTheme = () => setTheme((current) => (current === "dark" ? "light" : "dark"));
+  const toggleTheme = (e) => {
+    if (!document.startViewTransition) {
+      setTheme((current) => (current === "dark" ? "light" : "dark"));
+      return;
+    }
+
+    const x = e?.clientX ?? window.innerWidth / 2;
+    const y = e?.clientY ?? window.innerHeight / 2;
+    const endRadius = Math.hypot(
+      Math.max(x, window.innerWidth - x),
+      Math.max(y, window.innerHeight - y)
+    );
+
+    const transition = document.startViewTransition(() => {
+      setTheme((current) => (current === "dark" ? "light" : "dark"));
+    });
+
+    transition.ready.then(() => {
+      const clipPath = [
+        `circle(0px at ${x}px ${y}px)`,
+        `circle(${endRadius}px at ${x}px ${y}px)`,
+      ];
+      
+      document.documentElement.animate(
+        {
+          clipPath: clipPath,
+        },
+        {
+          duration: 600,
+          easing: "ease-in-out",
+          pseudoElement: "::view-transition-new(root)",
+        }
+      );
+    });
+  };
+
   const content = translations[language];
 
   return (

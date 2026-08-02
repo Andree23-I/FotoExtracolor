@@ -161,6 +161,66 @@ export default function AdminPage() {
     });
   };
 
+  const handleAddService = () => {
+    const newId = Date.now().toString();
+    const newServiceIt = {
+      id: newId,
+      title: "Nuovo Servizio",
+      description: "Descrizione del servizio",
+      subtitle: "",
+      iconName: "IconCamera",
+      featured: false
+    };
+    const newServiceEn = {
+      id: newId,
+      title: "New Service",
+      description: "Service description",
+      subtitle: "",
+      iconName: "IconCamera",
+      featured: false
+    };
+
+    setServicesData({
+      ...servicesData,
+      it: [...(servicesData.it || []), newServiceIt],
+      en: [...(servicesData.en || []), newServiceEn]
+    });
+  };
+
+  const handleRemoveService = (index) => {
+    if (!window.confirm("Sei sicuro di voler eliminare questo servizio?")) return;
+    const itServices = [...servicesData.it];
+    const enServices = [...servicesData.en];
+    itServices.splice(index, 1);
+    enServices.splice(index, 1);
+    setServicesData({
+      ...servicesData,
+      it: itServices,
+      en: enServices
+    });
+  };
+
+  const moveService = (index, direction) => {
+    const itServices = [...servicesData.it];
+    const enServices = [...servicesData.en];
+    
+    if (direction === 'up' && index > 0) {
+      [itServices[index - 1], itServices[index]] = [itServices[index], itServices[index - 1]];
+      [enServices[index - 1], enServices[index]] = [enServices[index], enServices[index - 1]];
+    } else if (direction === 'down' && index < itServices.length - 1) {
+      [itServices[index + 1], itServices[index]] = [itServices[index], itServices[index + 1]];
+      [enServices[index + 1], enServices[index]] = [enServices[index], enServices[index + 1]];
+    } else {
+      return;
+    }
+    
+    setServicesData({
+      ...servicesData,
+      it: itServices,
+      en: enServices
+    });
+  };
+
   const saveServices = async () => {
     try {
       const res = await fetch('/api.php?action=saveServices', {
@@ -400,14 +460,53 @@ export default function AdminPage() {
             {servicesData[editingLang] && servicesData[editingLang].length > 0 ? (
               <div style={{display: 'flex', flexDirection: 'column', gap: '1.5rem'}}>
                 {servicesData[editingLang].map((srv, index) => (
-                  <div key={srv.id} style={{background: 'rgba(0,0,0,0.3)', padding: '1.5rem', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.05)'}}>
-                    <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 'bold', fontSize: '0.9rem', color: 'var(--text-secondary)'}}>Titolo Servizio</label>
-                    <input 
-                      className="admin-input" 
-                      style={{width: '100%', marginBottom: '1rem', fontWeight: 'bold'}} 
-                      value={srv.title} 
-                      onChange={(e) => handleServiceChange(index, 'title', e.target.value)} 
-                    />
+                  <div key={srv.id || index} style={{background: 'rgba(0,0,0,0.3)', padding: '1.5rem', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.05)'}}>
+                    <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem'}}>
+                      <div style={{display: 'flex', gap: '0.5rem'}}>
+                        <button 
+                          className="admin-btn-secondary" 
+                          style={{padding: '0.3rem 0.6rem'}} 
+                          onClick={() => moveService(index, 'up')}
+                          disabled={index === 0}
+                        >&#9650;</button>
+                        <button 
+                          className="admin-btn-secondary" 
+                          style={{padding: '0.3rem 0.6rem'}} 
+                          onClick={() => moveService(index, 'down')}
+                          disabled={index === servicesData[editingLang].length - 1}
+                        >&#9660;</button>
+                      </div>
+                      <button className="admin-btn-danger" onClick={() => handleRemoveService(index)}>Elimina</button>
+                    </div>
+
+                    <div style={{display: 'flex', gap: '1rem', marginBottom: '1rem'}}>
+                      <div style={{flex: 1}}>
+                        <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 'bold', fontSize: '0.9rem', color: 'var(--text-secondary)'}}>Titolo Servizio</label>
+                        <input 
+                          className="admin-input" 
+                          style={{width: '100%', fontWeight: 'bold'}} 
+                          value={srv.title || ''} 
+                          onChange={(e) => handleServiceChange(index, 'title', e.target.value)} 
+                        />
+                      </div>
+                      <div style={{flex: 1}}>
+                        <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 'bold', fontSize: '0.9rem', color: 'var(--text-secondary)'}}>Icona</label>
+                        <select 
+                          className="admin-input" 
+                          style={{width: '100%', height: '42px'}}
+                          value={srv.iconName || 'IconCamera'} 
+                          onChange={(e) => handleServiceChange(index, 'iconName', e.target.value)}
+                        >
+                          <option value="IconCamera">Fotocamera (Eventi)</option>
+                          <option value="IconPrinter">Stampante (Stampe)</option>
+                          <option value="IconCalendar">Calendario (Cerimonie)</option>
+                          <option value="IconFilm">Pellicola (Sviluppo)</option>
+                          <option value="IconConvert">Conversione (VHS)</option>
+                          <option value="IconDrone">Drone (Riprese Aeree)</option>
+                          <option value="IconGift">Regalo (Gadget)</option>
+                        </select>
+                      </div>
+                    </div>
                     
                     <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 'bold', fontSize: '0.9rem', color: 'var(--text-secondary)'}}>Sottotitolo Evidenziato (Opzionale)</label>
                     <input 
@@ -421,14 +520,25 @@ export default function AdminPage() {
                     <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 'bold', fontSize: '0.9rem', color: 'var(--text-secondary)'}}>Descrizione Completa</label>
                     <textarea 
                       className="admin-input" 
-                      style={{width: '100%', minHeight: '80px', resize: 'vertical'}} 
-                      value={srv.description} 
+                      style={{width: '100%', minHeight: '80px', resize: 'vertical', marginBottom: '1rem'}} 
+                      value={srv.description || ''} 
                       onChange={(e) => handleServiceChange(index, 'description', e.target.value)} 
                     />
+
+                    <label style={{display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', color: 'var(--text-primary)'}}>
+                      <input 
+                        type="checkbox" 
+                        checked={srv.featured || false} 
+                        onChange={(e) => handleServiceChange(index, 'featured', e.target.checked)} 
+                        style={{width: '20px', height: '20px'}}
+                      />
+                      Metti in evidenza (Layout speciale)
+                    </label>
                   </div>
                 ))}
                 
-                <div style={{marginTop: '1rem', display: 'flex', justifyContent: 'flex-end'}}>
+                <div style={{marginTop: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+                  <button className="admin-btn-secondary" style={{padding: '1rem 2rem', fontSize: '1.1rem'}} onClick={handleAddService}>+ Aggiungi Servizio</button>
                   <button className="admin-btn-primary" style={{padding: '1rem 2rem', fontSize: '1.1rem'}} onClick={saveServices}>Salva Tutte le Modifiche</button>
                 </div>
               </div>
