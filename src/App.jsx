@@ -1305,11 +1305,11 @@ const STAFF = {
   en: [{ name: "Annalisa Capasso" }, { name: "Chiara Capasso" }, { name: "Carmen Capasso" }],
 };
 
-export const iconMap = {
+const iconMap = {
   IconCamera, IconPrinter, IconCalendar, IconFilm, IconConvert, IconDrone, IconGift
 };
 
-export function useDynamicServices() {
+function useDynamicServices() {
   const [dynamicServices, setDynamicServices] = useState(null);
 
   useEffect(() => {
