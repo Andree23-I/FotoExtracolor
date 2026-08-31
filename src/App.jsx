@@ -386,7 +386,7 @@ function TopHeaderBar({ language, setLanguage, theme, toggleTheme, content, onOp
       <div className="header-brand" onClick={() => navigate("/")} role="button" tabIndex={0}>
         <div className="brand-logo-wrapper">
           <img src={logo} alt="Foto Extracolor Logo" className="header-logo-img" />
-          <div className="logo-glow-ring"></div>
+
         </div>
         <div className="brand-titles">
           <span className="brand-name">FOTO EXTRACOLOR</span>
