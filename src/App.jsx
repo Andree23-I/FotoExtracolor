@@ -799,7 +799,9 @@ function Home({ content, language, theme, onOpenPhotoModal }) {
               <button
                 type="button"
                 className="split-pill-btn split-right"
-                onClick={onOpenPhotoModal}
+                onClick={() => {
+                  window.location.href = "mailto:info@fotoextracolor.com?subject=" + encodeURIComponent("Invio Foto per Stampa") + "&body=" + encodeURIComponent("Allega qui le tue foto e inserisci eventuali note o formati desiderati:\n\n");
+                }}
               >
                 <svg
                   className="split-svg-icon"

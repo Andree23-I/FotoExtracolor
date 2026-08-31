@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import emailjs from "@emailjs/browser";
+
 import JSZip from "jszip";
 
 // Comprehensive world country dial codes list
@@ -192,45 +192,11 @@ export default function PhotoUploadModal({ isOpen, onClose, language = "it" }) {
       const zipLink = await uploadZipToLitterbox();
       const photoLinksText = `Scarica l'archivio ZIP con tutte le foto cliccando sul link qui sotto:\n${zipLink}`;
 
-      const templateParams = {
-        to_name: "Foto Extracolor",
-        to_email: "info@fotoextracolor.com",
-        from_name: `${fullName} - ${email}`,
-        sender_name: `${fullName} - ${email}`,
-        from_email: email,
-        reply_to: email,
-        user_email: email,
-        user_name: fullName,
-        nome: fullName,
-        name: fullName,
-        email: email,
-        from_phone: `${countryCode} ${phoneNumber}`,
-        telefono: `${countryCode} ${phoneNumber}`,
-        phone: `${countryCode} ${phoneNumber}`,
-        message: message || "Nessuna nota specificata",
-        notes: message || "Nessuna nota specificata",
-        note: message || "Nessuna nota specificata",
-        note_e_formati: message || "Nessuna nota specificata",
-        download_links: photoLinksText,
-        photo_urls: photoLinksText,
-        photo_count: files.length,
-      };
-
-      try {
-        await emailjs.send(
-          "service_ishlp1c",
-          "template_r02n8n1",
-          templateParams,
-          "82Y-SnLFvuLVegJ26"
-        );
-      } catch (emailErr) {
-        console.warn("EmailJS direct send note:", emailErr);
-        const mailtoSubject = encodeURIComponent(`Nuova Richiesta Foto da ${fullName}`);
-        const mailtoBody = encodeURIComponent(
-          `Nome: ${fullName}\nTelefono: ${countryCode} ${phoneNumber}\nEmail: ${email}\nNote: ${message}\n\nLink Foto Caricate:\n${photoLinksText}`
-        );
-        window.open(`mailto:info@fotoextracolor.com?subject=${mailtoSubject}&body=${mailtoBody}`);
-      }
+      const mailtoSubject = encodeURIComponent(`Nuova Richiesta Foto da ${fullName}`);
+      const mailtoBody = encodeURIComponent(
+        `Nome: ${fullName}\nTelefono: ${countryCode} ${phoneNumber}\nEmail: ${email}\nNote: ${message || "Nessuna nota specificata"}\n\nLink Foto Caricate:\n${photoLinksText}`
+      );
+      window.location.href = `mailto:info@fotoextracolor.com?subject=${mailtoSubject}&body=${mailtoBody}`;
 
       setStatus({ type: "success", text: t.success });
       setTimeout(() => {
