@@ -315,18 +315,17 @@ export default function AdminPage() {
 
   if (!isAuthenticated) {
     return (
-      <div className="admin-page-container" style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-        <form onSubmit={handleLogin} className="admin-section" style={{textAlign: 'center', maxWidth: '400px', width: '100%'}}>
-          <h2 style={{marginBottom: '2rem'}}>Accesso Riservato</h2>
+      <div className="admin-page-container admin-login-wrapper">
+        <form onSubmit={handleLogin} className="admin-section admin-login-card">
+          <h2>Accesso Riservato</h2>
           <input 
             type="password" 
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="admin-input"
-            style={{display: 'block', width: '100%', marginBottom: '1.5rem'}}
+            className="admin-input admin-login-input"
             placeholder="Inserisci la password"
           />
-          <button type="submit" className="admin-btn-primary" style={{width: '100%'}}>Entra</button>
+          <button type="submit" className="admin-btn-primary admin-login-btn">Entra</button>
         </form>
       </div>
     );
@@ -360,9 +359,9 @@ export default function AdminPage() {
             <button className="admin-btn-secondary" onClick={() => setActiveCategory(null)}>
               &larr; Torna alle schede
             </button>
-            <h2 style={{marginTop: '1.5rem'}}>Gestione Foto: {activeCategory}</h2>
+            <h2 className="admin-section-subtitle">Gestione Foto: {activeCategory}</h2>
             
-            <div style={{marginBottom: '2rem'}}>
+            <div className="admin-upload-wrapper">
               <input 
                 type="file" 
                 id="photo-upload" 
@@ -370,18 +369,17 @@ export default function AdminPage() {
                 onChange={(e) => handleUploadPhoto(e, activeCategory)} 
                 style={{display: 'none'}} 
               />
-              <label htmlFor="photo-upload" className="admin-btn-primary" style={{display: 'inline-block', padding: '0.8rem 1.5rem', cursor: 'pointer'}}>
+              <label htmlFor="photo-upload" className="admin-btn-primary admin-upload-label">
                 + Carica Nuova Foto
               </label>
             </div>
             
-            <div style={{display: 'flex', gap: '1rem', flexWrap: 'wrap'}}>
+            <div className="admin-photo-grid">
                {(imagesByCategory[activeCategory.toLowerCase().replace(/\s+/g, '')] || []).map((url) => (
-                  <div key={url} style={{position: 'relative', width: '150px', height: '150px'}}>
-                     <img src={url} alt="portfolio" style={{width: '100%', height: '100%', objectFit: 'cover', borderRadius: '8px'}} />
+                  <div key={url} className="admin-photo-item">
+                     <img src={url} alt="portfolio" className="admin-photo-img" />
                      <button 
-                       className="admin-btn-danger" 
-                       style={{position: 'absolute', top: '5px', right: '5px', padding: '0.2rem 0.5rem', minWidth: '30px'}}
+                       className="admin-btn-danger admin-photo-delete"
                        onClick={() => handleDeletePhoto(url, activeCategory)}
                      >X</button>
                   </div>
@@ -411,17 +409,19 @@ export default function AdminPage() {
             <div className="admin-list">
               {categories.map((category, index) => (
                 <div key={category} className="admin-list-item">
-                  <div style={{display: 'flex', alignItems: 'center', gap: '1rem'}}>
-                    <div style={{display: 'flex', flexDirection: 'column', gap: '0.2rem'}}>
+                  <div className="admin-category-info">
+                    <div className="admin-reorder-btns">
                       <button 
                         onClick={() => moveCategory(index, 'up')} 
                         disabled={index === 0}
-                        style={{background: 'none', border: 'none', color: index === 0 ? 'gray' : 'white', cursor: index === 0 ? 'default' : 'pointer'}}
+                        className="admin-arrow-btn"
+                        aria-label="Sposta su"
                       >&#9650;</button>
                       <button 
                         onClick={() => moveCategory(index, 'down')} 
                         disabled={index === categories.length - 1}
-                        style={{background: 'none', border: 'none', color: index === categories.length - 1 ? 'gray' : 'white', cursor: index === categories.length - 1 ? 'default' : 'pointer'}}
+                        className="admin-arrow-btn"
+                        aria-label="Sposta giù"
                       >&#9660;</button>
                     </div>
                     <span className="admin-item-title">{category}</span>
@@ -446,54 +446,54 @@ export default function AdminPage() {
 
         {activeTab === 'services' && (
           <div className="admin-section">
-            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem'}}>
+            <div className="admin-services-header">
               <h2>Gestione Servizi</h2>
-              <div style={{display: 'flex', gap: '0.5rem'}}>
-                 <button className={`admin-tab ${editingLang === 'it' ? 'active' : ''}`} onClick={() => setEditingLang('it')} style={{padding: '0.5rem 1rem'}}>Italiano</button>
-                 <button className={`admin-tab ${editingLang === 'en' ? 'active' : ''}`} onClick={() => setEditingLang('en')} style={{padding: '0.5rem 1rem'}}>Inglese</button>
-                 <button className="admin-btn-secondary" onClick={autoTranslate} style={{padding: '0.5rem 1rem', marginLeft: '1rem', background: 'rgba(52, 152, 219, 0.2)', color: '#3498db', border: '1px solid rgba(52, 152, 219, 0.4)'}}>
+              <div className="admin-services-lang-group">
+                 <div className="admin-lang-tabs">
+                   <button className={`admin-tab ${editingLang === 'it' ? 'active' : ''}`} onClick={() => setEditingLang('it')}>Italiano</button>
+                   <button className={`admin-tab ${editingLang === 'en' ? 'active' : ''}`} onClick={() => setEditingLang('en')}>Inglese</button>
+                 </div>
+                 <button className="admin-btn-translate" onClick={autoTranslate}>
                    🤖 Traduzione Auto (IT &rarr; EN)
                  </button>
               </div>
             </div>
             
             {servicesData[editingLang] && servicesData[editingLang].length > 0 ? (
-              <div style={{display: 'flex', flexDirection: 'column', gap: '1.5rem'}}>
+              <div className="admin-services-list">
                 {servicesData[editingLang].map((srv, index) => (
-                  <div key={srv.id || index} style={{background: 'rgba(0,0,0,0.3)', padding: '1.5rem', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.05)'}}>
-                    <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem'}}>
-                      <div style={{display: 'flex', gap: '0.5rem'}}>
+                  <div key={srv.id || index} className="admin-service-card">
+                    <div className="admin-service-card-top">
+                      <div className="admin-reorder-horizontal">
                         <button 
-                          className="admin-btn-secondary" 
-                          style={{padding: '0.3rem 0.6rem'}} 
+                          className="admin-btn-secondary admin-move-btn" 
                           onClick={() => moveService(index, 'up')}
                           disabled={index === 0}
+                          title="Sposta su"
                         >&#9650;</button>
                         <button 
-                          className="admin-btn-secondary" 
-                          style={{padding: '0.3rem 0.6rem'}} 
+                          className="admin-btn-secondary admin-move-btn" 
                           onClick={() => moveService(index, 'down')}
                           disabled={index === servicesData[editingLang].length - 1}
+                          title="Sposta giù"
                         >&#9660;</button>
                       </div>
                       <button className="admin-btn-danger" onClick={() => handleRemoveService(index)}>Elimina</button>
                     </div>
 
-                    <div style={{display: 'flex', gap: '1rem', marginBottom: '1rem'}}>
-                      <div style={{flex: 1}}>
-                        <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 'bold', fontSize: '0.9rem', color: 'var(--text-secondary)'}}>Titolo Servizio</label>
+                    <div className="admin-service-row">
+                      <div className="admin-form-group">
+                        <label>Titolo Servizio</label>
                         <input 
                           className="admin-input" 
-                          style={{width: '100%', fontWeight: 'bold'}} 
                           value={srv.title || ''} 
                           onChange={(e) => handleServiceChange(index, 'title', e.target.value)} 
                         />
                       </div>
-                      <div style={{flex: 1}}>
-                        <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 'bold', fontSize: '0.9rem', color: 'var(--text-secondary)'}}>Icona</label>
+                      <div className="admin-form-group">
+                        <label>Icona</label>
                         <select 
-                          className="admin-input" 
-                          style={{width: '100%', height: '42px'}}
+                          className="admin-input admin-select" 
                           value={srv.iconName || 'IconCamera'} 
                           onChange={(e) => handleServiceChange(index, 'iconName', e.target.value)}
                         >
@@ -508,38 +508,39 @@ export default function AdminPage() {
                       </div>
                     </div>
                     
-                    <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 'bold', fontSize: '0.9rem', color: 'var(--text-secondary)'}}>Sottotitolo Evidenziato (Opzionale)</label>
-                    <input 
-                      className="admin-input" 
-                      style={{width: '100%', marginBottom: '1rem'}} 
-                      value={srv.subtitle || ''} 
-                      placeholder="Es: Foto, film e riprese aeree..."
-                      onChange={(e) => handleServiceChange(index, 'subtitle', e.target.value)} 
-                    />
+                    <div className="admin-form-group">
+                      <label>Sottotitolo Evidenziato (Opzionale)</label>
+                      <input 
+                        className="admin-input" 
+                        value={srv.subtitle || ''} 
+                        placeholder="Es: Foto, film e riprese aeree..."
+                        onChange={(e) => handleServiceChange(index, 'subtitle', e.target.value)} 
+                      />
+                    </div>
                     
-                    <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 'bold', fontSize: '0.9rem', color: 'var(--text-secondary)'}}>Descrizione Completa</label>
-                    <textarea 
-                      className="admin-input" 
-                      style={{width: '100%', minHeight: '80px', resize: 'vertical', marginBottom: '1rem'}} 
-                      value={srv.description || ''} 
-                      onChange={(e) => handleServiceChange(index, 'description', e.target.value)} 
-                    />
+                    <div className="admin-form-group">
+                      <label>Descrizione Completa</label>
+                      <textarea 
+                        className="admin-input admin-textarea" 
+                        value={srv.description || ''} 
+                        onChange={(e) => handleServiceChange(index, 'description', e.target.value)} 
+                      />
+                    </div>
 
-                    <label style={{display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', color: 'var(--text-primary)'}}>
+                    <label className="admin-featured-checkbox">
                       <input 
                         type="checkbox" 
                         checked={srv.featured || false} 
                         onChange={(e) => handleServiceChange(index, 'featured', e.target.checked)} 
-                        style={{width: '20px', height: '20px'}}
                       />
                       Metti in evidenza (Layout speciale)
                     </label>
                   </div>
                 ))}
                 
-                <div style={{marginTop: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-                  <button className="admin-btn-secondary" style={{padding: '1rem 2rem', fontSize: '1.1rem'}} onClick={handleAddService}>+ Aggiungi Servizio</button>
-                  <button className="admin-btn-primary" style={{padding: '1rem 2rem', fontSize: '1.1rem'}} onClick={saveServices}>Salva Tutte le Modifiche</button>
+                <div className="admin-service-actions">
+                  <button className="admin-btn-secondary" onClick={handleAddService}>+ Aggiungi Servizio</button>
+                  <button className="admin-btn-primary" onClick={saveServices}>Salva Tutte le Modifiche</button>
                 </div>
               </div>
             ) : (
