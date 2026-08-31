@@ -2357,15 +2357,39 @@ strong {
 }
 
 .service-card.featured {
-    /* Make featured card visually identical to standard service cards */
     position: relative;
-    background-color: rgba(26, 26, 26, 0.55);
-    border-color: rgba(255, 255, 255, 0.08);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+    border: 1px solid var(--primary-color);
+    box-shadow: 0 10px 30px rgba(212, 175, 55, 0.15);
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.05) 0%, rgba(26, 26, 26, 0.6) 100%);
+    transform: translateY(-4px);
+}
+
+.service-card.featured:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 40px rgba(212, 175, 55, 0.3);
+    border-color: var(--primary-color);
 }
 
 .service-card.featured .service-icon {
-    background: rgba(212, 175, 55, 0.12);
+    background: rgba(212, 175, 55, 0.15);
+    box-shadow: 0 0 15px rgba(212, 175, 55, 0.2);
+}
+
+.service-card.featured::before {
+    content: 'In Evidenza';
+    position: absolute;
+    top: -12px;
+    right: 24px;
+    background: var(--primary-color);
+    color: #111;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    box-shadow: 0 4px 10px rgba(212, 175, 55, 0.3);
+    z-index: 10;
 }
 
 
