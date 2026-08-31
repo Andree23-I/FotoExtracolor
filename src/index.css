@@ -46,6 +46,61 @@ html,
 
 html {
     scroll-behavior: smooth;
+    scrollbar-width: thin;
+    scrollbar-color: var(--primary-color) #111111;
+}
+
+:root[data-theme="light"] html {
+    scrollbar-color: #d84500 #f6f2e8;
+}
+
+/* Custom Scrollbar Styling (WebKit & Chromium) */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #111111;
+    border-left: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, var(--primary-color) 0%, #9e7f22 50%, var(--primary-color) 100%);
+    border-radius: 999px;
+    border: 2px solid #111111; /* Creates an elegant floating capsule look */
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+    transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #ffe066 0%, var(--primary-color) 50%, #ffe066 100%);
+    box-shadow: 0 0 15px rgba(212, 175, 55, 0.7);
+}
+
+::-webkit-scrollbar-corner {
+    background: #111111;
+}
+
+/* Light Theme Scrollbar */
+:root[data-theme="light"] ::-webkit-scrollbar-track {
+    background: #f6f2e8;
+    border-left: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+:root[data-theme="light"] ::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #d84500 0%, #b33900 50%, #d84500 100%);
+    border: 2px solid #f6f2e8;
+    box-shadow: 0 0 10px rgba(216, 69, 0, 0.25);
+}
+
+:root[data-theme="light"] ::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #ff6b22 0%, #d84500 50%, #ff6b22 100%);
+    box-shadow: 0 0 15px rgba(216, 69, 0, 0.5);
+}
+
+:root[data-theme="light"] ::-webkit-scrollbar-corner {
+    background: #f6f2e8;
 }
 
 /* Sticky footer: keeps the footer pinned to the bottom of the viewport
