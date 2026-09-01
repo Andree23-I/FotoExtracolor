@@ -85,6 +85,73 @@ function IconContact(props) {
   );
 }
 
+function IconExperience(props) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      {...props}
+    >
+      <circle cx="12" cy="8" r="6"></circle>
+      <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
+    </svg>
+  );
+}
+
+function IconLab(props) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      {...props}
+    >
+      <polyline points="6 9 6 2 18 2 18 9"></polyline>
+      <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+      <rect x="6" y="14" width="12" height="8"></rect>
+    </svg>
+  );
+}
+
+function IconInnovation(props) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      {...props}
+    >
+      <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+    </svg>
+  );
+}
+
+function IconHeartHandshake(props) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      {...props}
+    >
+      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+    </svg>
+  );
+}
+
 // Link to the Foto Extracolor Google reviews / business panel.
 const GOOGLE_REVIEWS_URL =
   "https://www.google.com/search?sca_esv=8661daf777ee415a&sxsrf=APpeQnuqdGqvpnmCq3QuvioBa8MfLRjH7A:1783171221322&q=foto+extracolor+salerno&si=APenkKnzv9m99ToiohAuzpadUwbOz34nZJ3j2Ukmo5XOUYWApuf1uLXXcDF8O4ULOaCSNh17t3bKbcvpQWNbpOSyRlTBOK-xLaxSaVEA6rn1eWVSvxkfsi0%3D&uds=AJ5uw1-SFE1ME9tIqnlIOIWp9Jjqv6n6AyWmrSP6hXkGDqBYBKIKI1-5RQwsdUk_mX9F5-2JY3kYmPV1OG4lUYodH3HP4E4qRRkkkIII1ai8R5VbwxEI55R8eufusxuIpSNZMsXYodiR&sa=X&ved=2ahUKEwiTruG5jrmVAxWCnP0HHbW4IhwQ3PALegQIHRAE&biw=1870&bih=919&dpr=1";
@@ -162,11 +229,72 @@ const translations = {
     },
     chisiamo: {
       pageKicker: "Chi Siamo",
-      pageTitle: "La Nostra Storia",
-      pageText:
-        "Scopri il nostro team e i valori che ci guidano ogni giorno per offrirti il miglior servizio possibile.",
-      teamKicker: "Il Team",
-      teamTitle: "I Professionisti",
+      pageTitle: "Passione, Tradizione e Innovazione",
+      pageSubtitle:
+        "Da oltre 60 anni, Foto Extracolor è il punto di riferimento a Salerno per chi desidera trasformare ogni emozione in un ricordo eterno.",
+      stats: [
+        { value: "60+", label: "Anni di Attività" },
+        { value: "3", label: "Generazioni di Clienti" },
+        { value: "100%", label: "Laboratorio Artigianale" },
+        { value: "4.5★", label: "Recensioni Certificate" },
+      ],
+      storyKicker: "La Nostra Eredità",
+      storyTitle: "Una bottega artigianale divenuta eccellenza a Salerno",
+      storyP1:
+        "Tutto ha inizio dalla passione pura di Riccardo Capasso, che muove i suoi primi passi tra scatti in esterni e lunghe ore artigianali in camera oscura. Ben presto, quel sogno si trasforma in una solida realtà a due grazie a Gabriela Donadio, che diventa il volto accogliente del negozio, gestendo con eleganza il bancone e gli scaffali colmi di storici rullini in un'attività dove anche i figli crescono respirando l'arte della pellicola.",
+      storyP2:
+        "Con il passare degli anni, il laboratorio si evolve: la camera oscura lascia il posto ai grandi macchinari industriali a sviluppo rapido, fino ad abbracciare la rivoluzione della fotografia digitale, accogliendo pixel, computer e nuove tecnologie per continuare a stampare i ricordi del tempo moderno. Oggi Foto Extracolor unisce la sensibilità analogica alla precisione digitale moderna.",
+      valuesKicker: "Perché Sceglierci",
+      valuesTitle: "I Nostri Valori Fondamentali",
+      values: [
+        {
+          title: "Esperienza Storica",
+          desc: "Oltre 60 anni trascorsi a raccontare matrimoni, ritratti, eventi e volti di Salerno.",
+        },
+        {
+          title: "Laboratorio Diretto",
+          desc: "Stampe immediate, calibrazione fine art e controllo maniacale di ogni sfumatura di colore.",
+        },
+        {
+          title: "Tecnologia & Droni 4K",
+          desc: "Riprese aeree d'autore, scanner per pellicole antiche e conversioni video da VHS a digitale.",
+        },
+        {
+          title: "Attenzione Umana",
+          desc: "Un'accoglienza calorosa e una consulenza su misura per ogni singola esigenza del cliente.",
+        },
+      ],
+      teamKicker: "Il Nostro Staff",
+      teamTitle: "I Volti di Foto Extracolor",
+      teamSubtitle:
+        "Una squadra affiatata e appassionata pronta a dare vita e luce ai tuoi progetti fotografici.",
+      staffList: [
+        {
+          name: "Annalisa Capasso",
+          role: "Stampa Digitale & Grafica",
+          desc: "Specialista nella gestione del colore, fotoritocco avanzato e creazione di fotogadget personalizzati.",
+        },
+        {
+          name: "Chiara Capasso",
+          role: "Fotografia di Studio & Eventi",
+          desc: "Cura i servizi in sala pose, i ritratti di famiglia e i reportage fotografici per eventi speciali.",
+        },
+        {
+          name: "Carmen Capasso",
+          role: "Accoglienza & Assistenza Clienti",
+          desc: "Il punto di riferimento per consigli, selezione stampe, album fotografici e stampe veloci.",
+        },
+      ],
+      galleryKicker: "Archivio Fotografico",
+      galleryTitle: "Scorci dal Nostro Archivio Storico",
+      gallerySubtitle:
+        "Un viaggio per immagini tra i macchinari d'epoca, la camera oscura e l'evoluzione del nostro studio.",
+      ctaKicker: "Vieni a Trovarci",
+      ctaTitle: "Hai una foto da stampare o un momento speciale da festeggiare?",
+      ctaText:
+        "Passa a trovarci in Via Raffaele Ricci 62 a Salerno, oppure scrivici su WhatsApp o per email.",
+      ctaWhatsapp: "Scrivici su WhatsApp",
+      ctaEmail: "Invia una Email",
     },
     footer: {
       rights: "Tutti i diritti riservati.",
@@ -220,11 +348,72 @@ const translations = {
     },
     chisiamo: {
       pageKicker: "About Us",
-      pageTitle: "Our Story",
-      pageText:
-        "Discover our team and the values that guide us every day to offer you the best possible service.",
-      teamKicker: "The Team",
-      teamTitle: "The Professionals",
+      pageTitle: "Passion, Tradition & Innovation",
+      pageSubtitle:
+        "For over 60 years, Foto Extracolor has been the landmark studio in Salerno for preserving your most precious memories.",
+      stats: [
+        { value: "60+", label: "Years in Business" },
+        { value: "3", label: "Generations of Clients" },
+        { value: "100%", label: "In-House Lab" },
+        { value: "4.5★", label: "Certified Reviews" },
+      ],
+      storyKicker: "Our Heritage",
+      storyTitle: "An artisanal workshop that grew into a local landmark",
+      storyP1:
+        "It all began with the genuine passion of Riccardo Capasso, balancing outdoor shooting and meticulous darkroom craftsmanship. Soon, that dream grew into a solid family reality with Gabriela Donadio, welcoming clients at the counter filled with historic film rolls in a business where children grew up breathing the art of film.",
+      storyP2:
+        "Over the decades, the lab evolved: moving from chemical darkrooms to industrial minilabs and eventually leading the digital revolution with top-tier scanners, printers, and drone tech. Today, we bring together time-tested artisanal care and modern digital precision.",
+      valuesKicker: "Why Choose Us",
+      valuesTitle: "Our Core Values",
+      values: [
+        {
+          title: "Six Decades of Heritage",
+          desc: "Over 60 years capturing weddings, portraits, family milestones, and local life in Salerno.",
+        },
+        {
+          title: "Direct In-House Lab",
+          desc: "Immediate printing, fine-art colour calibration, and hands-on control over every single print.",
+        },
+        {
+          title: "4K Drones & Modern Tech",
+          desc: "Aerial footage, vintage negative scanning, and full video digitisation from VHS to USB.",
+        },
+        {
+          title: "Family Care & Attention",
+          desc: "Friendly, tailored advice to help you select the ideal formats, frames, and print finishes.",
+        },
+      ],
+      teamKicker: "Our Team",
+      teamTitle: "The Faces Behind Foto Extracolor",
+      teamSubtitle:
+        "A dedicated and passionate team ready to bring brightness and life to your photographic ideas.",
+      staffList: [
+        {
+          name: "Annalisa Capasso",
+          role: "Digital Print & Graphics Specialist",
+          desc: "Expert in colour management, advanced photo editing, and personalized photo gifts.",
+        },
+        {
+          name: "Chiara Capasso",
+          role: "Studio & Event Photographer",
+          desc: "Specialized in portrait sessions, family shoots, and on-location celebration coverage.",
+        },
+        {
+          name: "Carmen Capasso",
+          role: "Customer Relations & Print Advisory",
+          desc: "Your go-to contact for format recommendations, photo books, and fast print orders.",
+        },
+      ],
+      galleryKicker: "Photo Archive",
+      galleryTitle: "Glances from Our Historic Archive",
+      gallerySubtitle:
+        "A visual stroll through vintage processing machines, darkroom memories, and studio milestones.",
+      ctaKicker: "Visit Us",
+      ctaTitle: "Have a photo to print or a special celebration coming up?",
+      ctaText:
+        "Drop by our studio at Via Raffaele Ricci 62 in Salerno or reach out to us directly online.",
+      ctaWhatsapp: "Message on WhatsApp",
+      ctaEmail: "Send an Email",
     },
     footer: {
       rights: "All rights reserved.",
@@ -1405,43 +1594,42 @@ function Servizi({ content, language }) {
 }
 
 function ChiSiamo({ content, language }) {
-  const [savedCategories, setSavedCategories] = useState([]);
-  const [imagesByCategory, setImagesByCategory] = useState({});
-  const [category, setCategory] = useState("");
-  const [isLoading, setIsLoading] = useState(true);
   const [selectedIndex, setSelectedIndex] = useState(null);
 
-  useEffect(() => {
-    fetch('/api.php?action=getPortfolio')
-      .then(res => res.json())
-      .then(data => {
-        if (data && data.categories) {
-          setSavedCategories(data.categories);
-          setImagesByCategory(data.imagesByCategory || {});
-          if (data.categories.length > 0) {
-            setCategory(data.categories[0].toLowerCase().replace(/\s+/g, ''));
-          }
-        }
-        setIsLoading(false);
-      })
-      .catch(err => {
-        console.error("Errore comunicazione con api.php (forse sei in locale senza PHP server?):", err);
-        // Fallback di sicurezza in caso di avvio locale
-        const fallbackCats = JSON.parse(localStorage.getItem('portfolio_categories')) || ['New York', 'Eventi'];
-        setSavedCategories(fallbackCats);
-        if (fallbackCats.length > 0) setCategory(fallbackCats[0].toLowerCase().replace(/\s+/g, ''));
-        setIsLoading(false);
-      });
-  }, []);
+  // Load historical photos (from /src/assets/Photos/Storia)
+  const storiaImages = Object.values(
+    import.meta.glob("/src/assets/Photos/Storia/**/*.{jpg,jpeg,png}", {
+      eager: true,
+      query: "?url",
+      import: "default",
+    }),
+  );
 
-  const images = imagesByCategory[category] || [];
+  // Load staff avatar photos
+  const staffGlobs = import.meta.glob(
+    [
+      "/src/assets/staff/*.{jpg,jpeg,png}",
+      "/src/assets/Photos/Staff/*.{jpg,jpeg,png}",
+    ],
+    { eager: true, query: "?url", import: "default" },
+  );
+
+  const staffImageMap = {};
+  Object.entries(staffGlobs).forEach(([path, url]) => {
+    const fname = path.split("/").pop().toLowerCase();
+    staffImageMap[fname] = url;
+  });
+
+  const getStaffImage = (name) => {
+    const first = name.split(" ")[0].toLowerCase();
+    const key = Object.keys(staffImageMap).find((k) => k.includes(first));
+    return key ? staffImageMap[key] : null;
+  };
 
   useEffect(() => {
-    setSelectedIndex(null);
-  }, [category]);
-
-  useEffect(() => {
-    const elements = document.querySelectorAll(".gallery-item.fade-in");
+    const elements = document.querySelectorAll(
+      ".fade-in, .fade-in-left, .fade-in-right, .fade-in-scale",
+    );
     elements.forEach((el) => el.classList.remove("visible"));
 
     const observer = new IntersectionObserver(
@@ -1458,62 +1646,228 @@ function ChiSiamo({ content, language }) {
     elements.forEach((el) => observer.observe(el));
 
     return () => observer.disconnect();
-  }, [category, language]);
+  }, [language]);
+
+  const valueIcons = [
+    IconExperience,
+    IconLab,
+    IconInnovation,
+    IconHeartHandshake,
+  ];
 
   const goPrev = () =>
-    setSelectedIndex((prev) => (prev - 1 + images.length) % images.length);
-  const goNext = () => setSelectedIndex((prev) => (prev + 1) % images.length);
+    setSelectedIndex(
+      (prev) => (prev - 1 + storiaImages.length) % storiaImages.length,
+    );
+  const goNext = () =>
+    setSelectedIndex((prev) => (prev + 1) % storiaImages.length);
 
   return (
     <div className="chisiamo-page">
-      {images.length > 0 && (
-        <div
-          className="page-backdrop"
-          style={{ backgroundImage: `url(${images[0]})` }}
-          aria-hidden="true"
-          key={category}
-        ></div>
-      )}
+      <div
+        className="page-backdrop"
+        style={{ backgroundImage: `url(${atelierPhoto})` }}
+        aria-hidden="true"
+      ></div>
 
+      {/* Hero Header Section */}
       <header className="chisiamo-header fade-in visible">
         <span className="section-kicker">{content.chisiamo.pageKicker}</span>
         <h1>{content.chisiamo.pageTitle}</h1>
-        <p className="chisiamo-subtitle">{content.chisiamo.pageText}</p>
-        <div className="category-tabs">
-          {savedCategories.map((cat) => {
-            const catId = cat.toLowerCase().replace(/\s+/g, '');
-            return (
-              <button
-                key={catId}
-                className={`tab-button ${category === catId ? "active" : ""}`}
-                onClick={() => setCategory(catId)}
-              >
-                {cat}
-              </button>
-            );
-          })}
-        </div>
+        <p className="chisiamo-subtitle">{content.chisiamo.pageSubtitle}</p>
 
+        {/* Stats Row */}
+        {content.chisiamo.stats && (
+          <div className="chisiamo-stats-grid fade-in">
+            {content.chisiamo.stats.map((stat, idx) => (
+              <div className="chisiamo-stat-card" key={idx}>
+                <span className="stat-number">{stat.value}</span>
+                <span className="stat-label">{stat.label}</span>
+              </div>
+            ))}
+          </div>
+        )}
       </header>
 
-      <div className="gallery-grid">
-        {images.map((src, idx) => (
-          <div
-            className="gallery-item fade-in"
-            key={src}
-            style={{ transitionDelay: `${(idx % 12) * 0.05}s` }}
-            onClick={() => setSelectedIndex(idx)}
-          >
-            <img
-              src={src}
-              alt={`Gallery ${idx + 1}`}
-              loading="lazy"
-            />
-            <span className="gallery-item-icon">
+      {/* Story & Heritage Section */}
+      <section className="chisiamo-story-section">
+        <div className="chisiamo-story-content">
+          <div className="chisiamo-story-text fade-in-left">
+            <span className="section-kicker">{content.chisiamo.storyKicker}</span>
+            <h2>{content.chisiamo.storyTitle}</h2>
+            <p>
+              {renderStoryText(
+                content.chisiamo.storyP1,
+                "Riccardo Capasso",
+                "Gabriela Donadio",
+              )}
+            </p>
+            <p>
+              {renderStoryText(
+                content.chisiamo.storyP2,
+                "Riccardo",
+                "Foto Extracolor",
+              )}
+            </p>
+          </div>
+          <div className="chisiamo-story-visual fade-in-right">
+            <Carousel images={storiaImages} />
+          </div>
+        </div>
+      </section>
+
+      {/* Values / Strengths Section */}
+      <section className="chisiamo-values-section">
+        <div className="section-header-centered fade-in">
+          <span className="section-kicker">{content.chisiamo.valuesKicker}</span>
+          <h2>{content.chisiamo.valuesTitle}</h2>
+        </div>
+        <div className="chisiamo-values-grid">
+          {content.chisiamo.values &&
+            content.chisiamo.values.map((item, idx) => {
+              const Icon = valueIcons[idx % valueIcons.length];
+              return (
+                <div
+                  className={`chisiamo-value-card fade-in-scale stagger-${(idx % 4) + 1}`}
+                  key={item.title}
+                >
+                  <div className="chisiamo-value-icon">
+                    <Icon />
+                  </div>
+                  <h3>{item.title}</h3>
+                  <p>{item.desc}</p>
+                </div>
+              );
+            })}
+        </div>
+      </section>
+
+      {/* Team & Staff Section */}
+      <section className="chisiamo-team-section">
+        <div className="section-header-centered fade-in">
+          <span className="section-kicker">{content.chisiamo.teamKicker}</span>
+          <h2>{content.chisiamo.teamTitle}</h2>
+          <p className="section-header-desc">{content.chisiamo.teamSubtitle}</p>
+        </div>
+
+        <div className="chisiamo-team-grid">
+          {content.chisiamo.staffList &&
+            content.chisiamo.staffList.map((member, idx) => {
+              const img = getStaffImage(member.name);
+              return (
+                <div
+                  className={`chisiamo-team-card fade-in-scale stagger-${(idx % 3) + 1}`}
+                  key={member.name}
+                >
+                  <div className="chisiamo-team-avatar-wrap">
+                    {img ? (
+                      <img
+                        src={img}
+                        alt={member.name}
+                        className="chisiamo-team-avatar-img"
+                      />
+                    ) : (
+                      <div className="chisiamo-team-avatar-fallback">
+                        {member.name
+                          .split(" ")
+                          .map((w) => w[0])
+                          .join("")}
+                      </div>
+                    )}
+                  </div>
+                  <div className="chisiamo-team-info">
+                    <h3>{member.name}</h3>
+                    <span className="chisiamo-team-role">{member.role}</span>
+                    <p className="chisiamo-team-desc">{member.desc}</p>
+                  </div>
+                </div>
+              );
+            })}
+        </div>
+      </section>
+
+      {/* Historic Photo Archive & Studio Gallery */}
+      <section className="chisiamo-archive-section">
+        <div className="section-header-centered fade-in">
+          <span className="section-kicker">{content.chisiamo.galleryKicker}</span>
+          <h2>{content.chisiamo.galleryTitle}</h2>
+          <p className="section-header-desc">
+            {content.chisiamo.gallerySubtitle}
+          </p>
+        </div>
+
+        <div className="chisiamo-archive-grid">
+          {storiaImages.slice(0, 12).map((src, idx) => (
+            <div
+              className="chisiamo-archive-item fade-in"
+              key={src}
+              style={{ transitionDelay: `${(idx % 12) * 0.04}s` }}
+              onClick={() => setSelectedIndex(idx)}
+              role="button"
+              tabIndex={0}
+              title="Ingrandisci foto"
+            >
+              <img
+                src={src}
+                alt={`Archivio Storico ${idx + 1}`}
+                loading="lazy"
+              />
+              <div className="chisiamo-archive-overlay">
+                <span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    <line x1="11" y1="8" x2="11" y2="14"></line>
+                    <line x1="8" y1="11" x2="14" y2="11"></line>
+                  </svg>
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Call to Action Card */}
+      <section className="chisiamo-cta-section fade-in">
+        <div className="chisiamo-cta-card">
+          <span className="section-kicker">{content.chisiamo.ctaKicker}</span>
+          <h2>{content.chisiamo.ctaTitle}</h2>
+          <p>{content.chisiamo.ctaText}</p>
+          <div className="chisiamo-cta-actions">
+            <a
+              href="https://wa.me/393246687521"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-primary chisiamo-cta-btn"
+            >
               <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="18"
-                height="18"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
+                <path d="M17.472 14.382c-.297-.149-1.758-.868-2.03-.967-.273-.099-.472-.148-.67.15-.198.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"></path>
+                <path d="M12.004 2.003c-5.514 0-9.997 4.483-9.997 9.997 0 1.762.462 3.484 1.34 5.001L2 22l5.117-1.341a9.96 9.96 0 0 0 4.887 1.271h.004c5.514 0 9.996-4.483 9.996-9.997 0-2.67-1.04-5.18-2.928-7.069a9.935 9.935 0 0 0-7.072-2.861zm0 18.187h-.003a8.166 8.166 0 0 1-4.166-1.14l-.299-.177-3.037.797.811-2.96-.194-.304a8.184 8.184 0 0 1-1.256-4.375c0-4.522 3.68-8.202 8.207-8.202a8.15 8.15 0 0 1 5.802 2.406 8.15 8.15 0 0 1 2.403 5.803c0 4.523-3.68 8.152-8.268 8.152z"></path>
+              </svg>
+              <span>{content.chisiamo.ctaWhatsapp}</span>
+            </a>
+            <a
+              href="mailto:info@fotoextracolor.com"
+              className="btn-secondary chisiamo-cta-btn"
+            >
+              <svg
+                width="20"
+                height="20"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -1521,18 +1875,18 @@ function ChiSiamo({ content, language }) {
                 strokeLinecap="round"
                 strokeLinejoin="round"
               >
-                <path d="M15 3h6v6"></path>
-                <path d="M9 21H3v-6"></path>
-                <path d="M21 3l-7 7"></path>
-                <path d="M3 21l7-7"></path>
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                <polyline points="22,6 12,13 2,6"></polyline>
               </svg>
-            </span>
+              <span>{content.chisiamo.ctaEmail}</span>
+            </a>
           </div>
-        ))}
-      </div>
+        </div>
+      </section>
 
+      {/* Lightbox for archive photos */}
       <Lightbox
-        images={images}
+        images={storiaImages}
         index={selectedIndex}
         onClose={() => setSelectedIndex(null)}
         onPrev={goPrev}
