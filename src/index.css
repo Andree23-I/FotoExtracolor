@@ -3048,36 +3048,7 @@ strong {
         padding: 6.5rem 5% 3rem;
     }
 }
-    object-fit: cover;
-    transition: transform 0.5s ease;
-}
 
-.gallery-item:hover img {
-    transform: scale(1.08);
-}
-
-.gallery-item-icon {
-    position: absolute;
-    bottom: 1rem;
-    left: 1rem;
-    width: 38px;
-    height: 38px;
-    border-radius: 50%;
-    background: var(--primary-color);
-    color: var(--bg-color);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    transform: translateY(10px);
-    transition: var(--transition);
-    z-index: 1;
-}
-
-.gallery-item:hover .gallery-item-icon {
-    opacity: 1;
-    transform: translateY(0);
-}
 
 /* Footer */
 .footer {
