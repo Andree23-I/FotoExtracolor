@@ -335,7 +335,7 @@ export default function AdminPage() {
     <div className="admin-page-container">
       <div className="admin-header">
         <h1>Pannello di Amministrazione</h1>
-        <p>Gestisci il portfolio e i servizi del sito</p>
+        <p>Gestisci la galleria e i servizi del sito</p>
       </div>
 
       <div className="admin-tabs">
@@ -343,7 +343,7 @@ export default function AdminPage() {
           className={`admin-tab ${activeTab === 'portfolio' ? 'active' : ''}`}
           onClick={() => setActiveTab('portfolio')}
         >
-          Gestione Portfolio
+          Gestione Galleria
         </button>
         <button 
           className={`admin-tab ${activeTab === 'services' ? 'active' : ''}`}
@@ -393,7 +393,7 @@ export default function AdminPage() {
 
         {activeTab === 'portfolio' && !activeCategory && (
           <div className="admin-section">
-            <h2>Schede Portfolio</h2>
+            <h2>Schede Galleria</h2>
             
             <form onSubmit={handleAddCategory} className="admin-add-form">
               <input 

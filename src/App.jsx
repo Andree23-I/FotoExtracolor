@@ -51,7 +51,7 @@ function IconServices(props) {
   );
 }
 
-function IconPortfolio(props) {
+function IconChiSiamo(props) {
   return (
     <svg
       viewBox="0 0 24 24"
@@ -118,7 +118,7 @@ const translations = {
     nav: {
       home: "Home",
       servizi: "Servizi",
-      portfolio: "Portfolio",
+      chisiamo: "Chi Siamo",
       contatti: "Contatti",
       language: "Lingua",
       dark: "Scuro",
@@ -160,15 +160,13 @@ const translations = {
       pageText:
         "Dalla stampa professionale ai ricordi su pellicola, fino ai gadget personalizzati: tutto quello che serve per dare forma ai tuoi momenti più importanti.",
     },
-    portfolio: {
-      pageKicker: "Portfolio",
-      pageTitle: "I Nostri Scatti",
+    chisiamo: {
+      pageKicker: "Chi Siamo",
+      pageTitle: "La Nostra Storia",
       pageText:
-        "Un viaggio tra le storie che abbiamo raccontato attraverso l'obiettivo, dai grattacieli di New York ai momenti più intimi dei matrimoni.",
-      newYork: "New York",
-      events: "Eventi",
-      countLabel: "scatti",
-      altPrefix: "Scatto",
+        "Scopri il nostro team e i valori che ci guidano ogni giorno per offrirti il miglior servizio possibile.",
+      teamKicker: "Il Team",
+      teamTitle: "I Professionisti",
     },
     footer: {
       rights: "Tutti i diritti riservati.",
@@ -178,7 +176,7 @@ const translations = {
     nav: {
       home: "Home",
       servizi: "Services",
-      portfolio: "Portfolio",
+      chisiamo: "About Us",
       contatti: "Contact",
       language: "Language",
       dark: "Dark",
@@ -220,15 +218,13 @@ const translations = {
       pageText:
         "From professional printing to film memories, to personalized gadgets: everything you need to give shape to your most important moments.",
     },
-    portfolio: {
-      pageKicker: "Portfolio",
-      pageTitle: "Our Shots",
+    chisiamo: {
+      pageKicker: "About Us",
+      pageTitle: "Our Story",
       pageText:
-        "A journey through the stories we have told through the lens, from the skyscrapers of New York to the most intimate moments of weddings.",
-      newYork: "New York",
-      events: "Events",
-      countLabel: "shots",
-      altPrefix: "Shot",
+        "Discover our team and the values that guide us every day to offer you the best possible service.",
+      teamKicker: "The Team",
+      teamTitle: "The Professionals",
     },
     footer: {
       rights: "All rights reserved.",
@@ -368,7 +364,7 @@ function TopHeaderBar({ language, setLanguage, theme, toggleTheme, content, onOp
   const menuItems = [
     { id: "/", label: content.nav.home, icon: IconHome },
     { id: "/servizi", label: content.nav.servizi, icon: IconServices },
-    { id: "/portfolio", label: content.nav.portfolio, icon: IconPortfolio },
+    { id: "/chisiamo", label: content.nav.chisiamo, icon: IconChiSiamo },
     { id: "/#contatti", label: content.nav.contatti, icon: IconContact },
   ];
 
@@ -471,7 +467,7 @@ function WindowsTaskbar({ content }) {
   const menuItems = [
     { id: "/", label: content.nav.home },
     { id: "/servizi", label: content.nav.servizi },
-    { id: "/portfolio", label: content.nav.portfolio },
+    { id: "/chisiamo", label: content.nav.chisiamo },
     { id: "/#contatti", label: content.nav.contatti },
   ];
 
@@ -517,8 +513,8 @@ function getPageTransitionMeta(pathname, hash, content) {
     return { label: content.nav.servizi, index: 1 };
   }
 
-  if (pathname === "/portfolio") {
-    return { label: content.nav.portfolio, index: 2 };
+  if (pathname === "/chisiamo") {
+    return { label: content.nav.chisiamo, index: 2 };
   }
 
   return { label: content.nav.home, index: 0 };
@@ -646,7 +642,7 @@ function RoutedContent({ content, language, theme, onOpenPhotoModal }) {
       <Routes>
         <Route path="/" element={<Home content={content} language={language} theme={theme} onOpenPhotoModal={onOpenPhotoModal} />} />
         <Route path="/servizi" element={<Servizi content={content} language={language} />} />
-        <Route path="/portfolio" element={<Portfolio content={content} language={language} />} />
+        <Route path="/chisiamo" element={<ChiSiamo content={content} language={language} />} />
         <Route path="/admin" element={<AdminPage />} />
       </Routes>
     </main>
@@ -1408,7 +1404,7 @@ function Servizi({ content, language }) {
   );
 }
 
-function Portfolio({ content, language }) {
+function ChiSiamo({ content, language }) {
   const [savedCategories, setSavedCategories] = useState([]);
   const [imagesByCategory, setImagesByCategory] = useState({});
   const [category, setCategory] = useState("");
@@ -1469,7 +1465,7 @@ function Portfolio({ content, language }) {
   const goNext = () => setSelectedIndex((prev) => (prev + 1) % images.length);
 
   return (
-    <div className="portfolio-page">
+    <div className="chisiamo-page">
       {images.length > 0 && (
         <div
           className="page-backdrop"
@@ -1479,10 +1475,10 @@ function Portfolio({ content, language }) {
         ></div>
       )}
 
-      <header className="portfolio-header fade-in visible">
-        <span className="section-kicker">{content.portfolio.pageKicker}</span>
-        <h1>{content.portfolio.pageTitle}</h1>
-        <p className="portfolio-subtitle">{content.portfolio.pageText}</p>
+      <header className="chisiamo-header fade-in visible">
+        <span className="section-kicker">{content.chisiamo.pageKicker}</span>
+        <h1>{content.chisiamo.pageTitle}</h1>
+        <p className="chisiamo-subtitle">{content.chisiamo.pageText}</p>
         <div className="category-tabs">
           {savedCategories.map((cat) => {
             const catId = cat.toLowerCase().replace(/\s+/g, '');
@@ -1497,9 +1493,7 @@ function Portfolio({ content, language }) {
             );
           })}
         </div>
-        <p className="gallery-count">
-          {images.length} {content.portfolio.countLabel}
-        </p>
+
       </header>
 
       <div className="gallery-grid">
@@ -1512,7 +1506,7 @@ function Portfolio({ content, language }) {
           >
             <img
               src={src}
-              alt={`${content.portfolio.altPrefix} ${idx + 1}`}
+              alt={`Gallery ${idx + 1}`}
               loading="lazy"
             />
             <span className="gallery-item-icon">

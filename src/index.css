@@ -1631,10 +1631,9 @@ p {
 .contact-section strong,
 .contact-section .info h3,
 .contact-section .contact-icon,
-.portfolio-header p,
-.portfolio-header h1,
-.portfolio-header .section-kicker,
-.portfolio-header .gallery-count,
+.chisiamo-header p,
+.chisiamo-header h1,
+.chisiamo-header .section-kicker,
 .services-header p,
 .services-header h1,
 .services-header .section-kicker,
@@ -2633,20 +2632,20 @@ strong {
     margin-bottom: 0;
 }
 
-/* Portfolio Page */
-.portfolio-page {
+/* ChiSiamo Page */
+.chisiamo-page {
     position: relative;
     padding: 8rem 5% 4rem;
     min-height: 100vh;
     min-height: 100svh;
 }
 
-.portfolio-header {
+.chisiamo-header {
     text-align: center;
     margin-bottom: 2.5rem;
 }
 
-.portfolio-subtitle {
+.chisiamo-subtitle {
     max-width: 600px;
     margin: 0 auto 0.5rem;
 }
@@ -2906,7 +2905,7 @@ body.nav-open {
         gap: 1rem;
     }
 
-    .portfolio-page {
+    .chisiamo-page {
         padding: 7rem 6% 3rem;
     }
 
