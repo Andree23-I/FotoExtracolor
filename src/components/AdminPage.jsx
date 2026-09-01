@@ -2,7 +2,11 @@ import React, { useState, useEffect } from 'react';
 import './AdminPage.css';
 
 export default function AdminPage() {
-  const [activeTab, setActiveTab] = useState('portfolio');
+  const [activeTab, setActiveTab] = useState('settings');
+  const [pageMode, setPageMode] = useState(() => {
+    return localStorage.getItem('fotoextracolor_page_mode') || 'chisiamo';
+  });
+  const [modeFeedback, setModeFeedback] = useState('');
   const [categories, setCategories] = useState([]);
   const [imagesByCategory, setImagesByCategory] = useState({});
   const [isLoading, setIsLoading] = useState(true);
@@ -16,6 +20,19 @@ export default function AdminPage() {
   const [password, setPassword] = useState('');
 
   useEffect(() => {
+    fetch('/api.php?action=getConfig')
+      .then(res => res.json())
+      .then(data => {
+        if (data && data.pageMode) {
+          setPageMode(data.pageMode);
+          localStorage.setItem('fotoextracolor_page_mode', data.pageMode);
+        }
+      })
+      .catch(() => {
+        const saved = localStorage.getItem('fotoextracolor_page_mode');
+        if (saved) setPageMode(saved);
+      });
+
     fetch('/api.php?action=getPortfolio')
       .then(res => res.json())
       .then(data => {
@@ -44,6 +61,29 @@ export default function AdminPage() {
         if (localS) setServicesData(JSON.parse(localS));
       });
   }, []);
+
+  const handlePageModeChange = async (newMode) => {
+    setPageMode(newMode);
+    localStorage.setItem('fotoextracolor_page_mode', newMode);
+    window.dispatchEvent(new Event('storage'));
+    setModeFeedback(
+      newMode === 'chisiamo'
+        ? '✓ Pagina "Chi Siamo" impostata come attiva sul sito!'
+        : '✓ Pagina "Portfolio" impostata come attiva sul sito!'
+    );
+    setTimeout(() => setModeFeedback(''), 4500);
+
+    try {
+      await fetch('/api.php?action=saveConfig', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ config: { pageMode: newMode } })
+      });
+    } catch (err) {
+      console.warn("Salvato in locale:", err);
+    }
+  };
+
   const [newCategory, setNewCategory] = useState('');
 
   const handleAddCategory = async (e) => {
@@ -335,25 +375,118 @@ export default function AdminPage() {
     <div className="admin-page-container">
       <div className="admin-header">
         <h1>Pannello di Amministrazione</h1>
-        <p>Gestisci la galleria e i servizi del sito</p>
+        <p>Gestisci le pagine, le immagini e i servizi del sito web</p>
       </div>
 
+      {modeFeedback && (
+        <div className="admin-alert-banner">
+          <span>{modeFeedback}</span>
+        </div>
+      )}
+
       <div className="admin-tabs">
+        <button 
+          className={`admin-tab ${activeTab === 'settings' ? 'active' : ''}`}
+          onClick={() => setActiveTab('settings')}
+        >
+          ⚙️ Scelta Pagina ({pageMode === 'chisiamo' ? 'Chi Siamo' : 'Portfolio'})
+        </button>
         <button 
           className={`admin-tab ${activeTab === 'portfolio' ? 'active' : ''}`}
           onClick={() => setActiveTab('portfolio')}
         >
-          Gestione Galleria
+          🖼️ Gestione Galleria / Portfolio
         </button>
         <button 
           className={`admin-tab ${activeTab === 'services' ? 'active' : ''}`}
           onClick={() => setActiveTab('services')}
         >
-          Gestione Servizi
+          🛠️ Gestione Servizi
         </button>
       </div>
 
       <div className="admin-content">
+        {activeTab === 'settings' && (
+          <div className="admin-section admin-settings-section">
+            <div className="admin-section-header">
+              <h2>Configurazione Pagina Principale</h2>
+              <p>
+                Scegli se mostrare nel menu e nella navigazione la pagina <strong>Chi Siamo</strong> oppure la pagina <strong>Portfolio</strong>.
+              </p>
+            </div>
+
+            <div className="admin-mode-grid">
+              {/* Option: Chi Siamo */}
+              <div 
+                className={`admin-mode-card ${pageMode === 'chisiamo' ? 'selected' : ''}`}
+                onClick={() => handlePageModeChange('chisiamo')}
+              >
+                <div className="admin-mode-top">
+                  <span className="admin-mode-icon">👥</span>
+                  <span className={`admin-mode-status-badge ${pageMode === 'chisiamo' ? 'active' : ''}`}>
+                    {pageMode === 'chisiamo' ? '● ATTIVA ORA' : 'Disattivata'}
+                  </span>
+                </div>
+                <h3>Pagina "Chi Siamo"</h3>
+                <p className="admin-mode-desc">
+                  Ideale per un sito web vetrina. Racconta oltre 60 anni di storia di Foto Extracolor, la fondazione di Riccardo Capasso & Gabriela Donadio, la presentazione dello staff, i valori aziendali e l'archivio storico.
+                </p>
+                <ul className="admin-mode-perks">
+                  <li>✓ Storia & Origini del laboratorio</li>
+                  <li>✓ Presentazione approfondita dello Staff</li>
+                  <li>✓ Valori aziendali & Statistiche chiave</li>
+                  <li>✓ Archivio storico con Lightbox</li>
+                  <li>✓ Box contatto rapido (WhatsApp / Email)</li>
+                </ul>
+                <button 
+                  type="button" 
+                  className={`admin-mode-select-btn ${pageMode === 'chisiamo' ? 'active' : ''}`}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handlePageModeChange('chisiamo');
+                  }}
+                >
+                  {pageMode === 'chisiamo' ? 'Pagina Attualmente Attiva' : 'Attiva Pagina Chi Siamo'}
+                </button>
+              </div>
+
+              {/* Option: Portfolio */}
+              <div 
+                className={`admin-mode-card ${pageMode === 'portfolio' ? 'selected' : ''}`}
+                onClick={() => handlePageModeChange('portfolio')}
+              >
+                <div className="admin-mode-top">
+                  <span className="admin-mode-icon">📷</span>
+                  <span className={`admin-mode-status-badge ${pageMode === 'portfolio' ? 'active' : ''}`}>
+                    {pageMode === 'portfolio' ? '● ATTIVA ORA' : 'Disattivata'}
+                  </span>
+                </div>
+                <h3>Pagina "Portfolio"</h3>
+                <p className="admin-mode-desc">
+                  Ideale per mostrare gallerie fotografiche organizzate per categorie (es. Matrimoni, Eventi, Ritratti, ecc.) con caricamento e gestione foto dal pannello admin.
+                </p>
+                <ul className="admin-mode-perks">
+                  <li>✓ Schede & Categorie personalizzabili</li>
+                  <li>✓ Caricamento diretto di nuovi scatti</li>
+                  <li>✓ Visualizzazione a griglia con Lightbox</li>
+                  <li>✓ Riordino ed eliminazione rapida foto</li>
+                  <li>✓ Gestione album fotografici</li>
+                </ul>
+                <button 
+                  type="button" 
+                  className={`admin-mode-select-btn ${pageMode === 'portfolio' ? 'active' : ''}`}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handlePageModeChange('portfolio');
+                  }}
+                >
+                  {pageMode === 'portfolio' ? 'Pagina Attualmente Attiva' : 'Attiva Pagina Portfolio'}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
         {activeTab === 'portfolio' && activeCategory && (
           <div className="admin-section">
             <button className="admin-btn-secondary" onClick={() => setActiveCategory(null)}>

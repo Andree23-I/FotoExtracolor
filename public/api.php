@@ -97,7 +97,26 @@ switch ($action) {
             http_response_code(400);
             echo json_encode(["error" => "Dati mancanti"]);
         }
+    case 'getConfig':
+        $configFile = __DIR__ . '/uploads/config.json';
+        if (file_exists($configFile)) {
+            echo file_get_contents($configFile);
+        } else {
+            echo json_encode(["pageMode" => "chisiamo"]);
+        }
         break;
+
+    case 'saveConfig':
+        $data = json_decode(file_get_contents('php://input'), true);
+        if (isset($data['config'])) {
+            file_put_contents(__DIR__ . '/uploads/config.json', json_encode($data['config'], JSON_PRETTY_PRINT));
+            echo json_encode(["success" => true]);
+        } else {
+            http_response_code(400);
+            echo json_encode(["error" => "Dati mancanti"]);
+        }
+        break;
+
 
     case 'createCategory':
         $data = json_decode(file_get_contents('php://input'), true);

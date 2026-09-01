@@ -129,6 +129,23 @@ app.delete('/api/portfolio/image', (req, res) => {
   }
 });
 
+// 6. GET & POST config (Gestione pagina attiva: Chi Siamo / Portfolio)
+const CONFIG_FILE = path.join(__dirname, 'uploads', 'config.json');
+
+app.get('/api/config', (req, res) => {
+  if (fs.existsSync(CONFIG_FILE)) {
+    res.json(JSON.parse(fs.readFileSync(CONFIG_FILE, 'utf8')));
+  } else {
+    res.json({ pageMode: 'chisiamo' });
+  }
+});
+
+app.post('/api/config', (req, res) => {
+  const config = req.body.config || req.body;
+  fs.writeFileSync(CONFIG_FILE, JSON.stringify(config, null, 2));
+  res.json({ success: true });
+});
+
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`Server Node.js per gestione admin in esecuzione sulla porta ${PORT}`);

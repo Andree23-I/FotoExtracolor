@@ -51,6 +51,23 @@ function IconServices(props) {
   );
 }
 
+function IconPortfolio(props) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      {...props}
+    >
+      <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+      <circle cx="12" cy="13" r="4"></circle>
+    </svg>
+  );
+}
+
 function IconChiSiamo(props) {
   return (
     <svg
@@ -67,6 +84,36 @@ function IconChiSiamo(props) {
       <polyline points="21 15 16 10 5 21"></polyline>
     </svg>
   );
+}
+
+function usePageMode() {
+  const [mode, setMode] = useState(() => {
+    if (typeof window === "undefined") return "chisiamo";
+    return window.localStorage.getItem("fotoextracolor_page_mode") || "chisiamo";
+  });
+
+  useEffect(() => {
+    const handleSync = () => {
+      const current = window.localStorage.getItem("fotoextracolor_page_mode") || "chisiamo";
+      setMode(current);
+    };
+
+    window.addEventListener("storage", handleSync);
+
+    fetch("/api.php?action=getConfig")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data && data.pageMode) {
+          setMode(data.pageMode);
+          window.localStorage.setItem("fotoextracolor_page_mode", data.pageMode);
+        }
+      })
+      .catch(() => {});
+
+    return () => window.removeEventListener("storage", handleSync);
+  }, []);
+
+  return mode;
 }
 
 function IconContact(props) {
@@ -186,6 +233,7 @@ const translations = {
       home: "Home",
       servizi: "Servizi",
       chisiamo: "Chi Siamo",
+      portfolio: "Portfolio",
       contatti: "Contatti",
       language: "Lingua",
       dark: "Scuro",
@@ -226,6 +274,14 @@ const translations = {
       pageTitle: "Cosa Facciamo",
       pageText:
         "Dalla stampa professionale ai ricordi su pellicola, fino ai gadget personalizzati: tutto quello che serve per dare forma ai tuoi momenti più importanti.",
+    },
+    portfolio: {
+      pageKicker: "Portfolio",
+      pageTitle: "I Nostri Scatti",
+      pageText:
+        "Un viaggio tra le storie che abbiamo raccontato attraverso l'obiettivo, dai matrimoni ai ritratti, fino agli eventi più speciali.",
+      countLabel: "scatti",
+      altPrefix: "Scatto",
     },
     chisiamo: {
       pageKicker: "Chi Siamo",
@@ -305,6 +361,7 @@ const translations = {
       home: "Home",
       servizi: "Services",
       chisiamo: "About Us",
+      portfolio: "Portfolio",
       contatti: "Contact",
       language: "Language",
       dark: "Dark",
@@ -345,6 +402,14 @@ const translations = {
       pageTitle: "What We Do",
       pageText:
         "From professional printing to film memories, to personalized gadgets: everything you need to give shape to your most important moments.",
+    },
+    portfolio: {
+      pageKicker: "Portfolio",
+      pageTitle: "Our Shots",
+      pageText:
+        "A journey through the stories told through our lens, from weddings to portraits and celebrations.",
+      countLabel: "shots",
+      altPrefix: "Shot",
     },
     chisiamo: {
       pageKicker: "About Us",
@@ -549,11 +614,16 @@ function TopHeaderBar({ language, setLanguage, theme, toggleTheme, content, onOp
   const navigate = useNavigate();
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const pageMode = usePageMode();
+
+  const dynamicMenuItem = pageMode === "portfolio"
+    ? { id: "/portfolio", label: content.nav.portfolio, icon: IconPortfolio }
+    : { id: "/chisiamo", label: content.nav.chisiamo, icon: IconChiSiamo };
 
   const menuItems = [
     { id: "/", label: content.nav.home, icon: IconHome },
     { id: "/servizi", label: content.nav.servizi, icon: IconServices },
-    { id: "/chisiamo", label: content.nav.chisiamo, icon: IconChiSiamo },
+    dynamicMenuItem,
     { id: "/#contatti", label: content.nav.contatti, icon: IconContact },
   ];
 
@@ -652,11 +722,16 @@ function TopHeaderBar({ language, setLanguage, theme, toggleTheme, content, onOp
 function WindowsTaskbar({ content }) {
   const navigate = useNavigate();
   const location = useLocation();
+  const pageMode = usePageMode();
+
+  const dynamicMenuItem = pageMode === "portfolio"
+    ? { id: "/portfolio", label: content.nav.portfolio }
+    : { id: "/chisiamo", label: content.nav.chisiamo };
 
   const menuItems = [
     { id: "/", label: content.nav.home },
     { id: "/servizi", label: content.nav.servizi },
-    { id: "/chisiamo", label: content.nav.chisiamo },
+    dynamicMenuItem,
     { id: "/#contatti", label: content.nav.contatti },
   ];
 
@@ -704,6 +779,10 @@ function getPageTransitionMeta(pathname, hash, content) {
 
   if (pathname === "/chisiamo") {
     return { label: content.nav.chisiamo, index: 2 };
+  }
+
+  if (pathname === "/portfolio") {
+    return { label: content.nav.portfolio, index: 2 };
   }
 
   return { label: content.nav.home, index: 0 };
@@ -832,6 +911,7 @@ function RoutedContent({ content, language, theme, onOpenPhotoModal }) {
         <Route path="/" element={<Home content={content} language={language} theme={theme} onOpenPhotoModal={onOpenPhotoModal} />} />
         <Route path="/servizi" element={<Servizi content={content} language={language} />} />
         <Route path="/chisiamo" element={<ChiSiamo content={content} language={language} />} />
+        <Route path="/portfolio" element={<Portfolio content={content} language={language} />} />
         <Route path="/admin" element={<AdminPage />} />
       </Routes>
     </main>
@@ -1589,6 +1669,144 @@ function Servizi({ content, language }) {
           );
         })}
       </div>
+    </div>
+  );
+}
+
+function Portfolio({ content, language }) {
+  const [savedCategories, setSavedCategories] = useState([]);
+  const [imagesByCategory, setImagesByCategory] = useState({});
+  const [category, setCategory] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
+  const [selectedIndex, setSelectedIndex] = useState(null);
+
+  useEffect(() => {
+    fetch('/api.php?action=getPortfolio')
+      .then(res => res.json())
+      .then(data => {
+        if (data && data.categories) {
+          setSavedCategories(data.categories);
+          setImagesByCategory(data.imagesByCategory || {});
+          if (data.categories.length > 0) {
+            setCategory(data.categories[0].toLowerCase().replace(/\s+/g, ''));
+          }
+        }
+        setIsLoading(false);
+      })
+      .catch(err => {
+        const fallbackCats = JSON.parse(localStorage.getItem('portfolio_categories')) || ['New York', 'Eventi'];
+        setSavedCategories(fallbackCats);
+        if (fallbackCats.length > 0) setCategory(fallbackCats[0].toLowerCase().replace(/\s+/g, ''));
+        setIsLoading(false);
+      });
+  }, []);
+
+  const images = imagesByCategory[category] || [];
+
+  useEffect(() => {
+    setSelectedIndex(null);
+  }, [category]);
+
+  useEffect(() => {
+    const elements = document.querySelectorAll(".gallery-item.fade-in");
+    elements.forEach((el) => el.classList.remove("visible"));
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+          }
+        });
+      },
+      { threshold: 0.1 },
+    );
+
+    elements.forEach((el) => observer.observe(el));
+
+    return () => observer.disconnect();
+  }, [category, language]);
+
+  const goPrev = () =>
+    setSelectedIndex((prev) => (prev - 1 + images.length) % images.length);
+  const goNext = () => setSelectedIndex((prev) => (prev + 1) % images.length);
+
+  return (
+    <div className="portfolio-page">
+      {images.length > 0 && (
+        <div
+          className="page-backdrop"
+          style={{ backgroundImage: `url(${images[0]})` }}
+          aria-hidden="true"
+          key={category}
+        ></div>
+      )}
+
+      <header className="portfolio-header fade-in visible">
+        <span className="section-kicker">{content.portfolio?.pageKicker || "Portfolio"}</span>
+        <h1>{content.portfolio?.pageTitle || "I Nostri Scatti"}</h1>
+        <p className="portfolio-subtitle">{content.portfolio?.pageText || ""}</p>
+        <div className="category-tabs">
+          {savedCategories.map((cat) => {
+            const catId = cat.toLowerCase().replace(/\s+/g, '');
+            return (
+              <button
+                key={catId}
+                className={`tab-button ${category === catId ? "active" : ""}`}
+                onClick={() => setCategory(catId)}
+              >
+                {cat}
+              </button>
+            );
+          })}
+        </div>
+        <p className="gallery-count">
+          {images.length} {content.portfolio?.countLabel || "scatti"}
+        </p>
+      </header>
+
+      <div className="gallery-grid">
+        {images.map((src, idx) => (
+          <div
+            className="gallery-item fade-in"
+            key={src}
+            style={{ transitionDelay: `${(idx % 12) * 0.05}s` }}
+            onClick={() => setSelectedIndex(idx)}
+          >
+            <img
+              src={src}
+              alt={`${content.portfolio?.altPrefix || "Scatto"} ${idx + 1}`}
+              loading="lazy"
+            />
+            <span className="gallery-item-icon">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M15 3h6v6"></path>
+                <path d="M9 21H3v-6"></path>
+                <path d="M21 3l-7 7"></path>
+                <path d="M3 21l7-7"></path>
+              </svg>
+            </span>
+          </div>
+        ))}
+      </div>
+
+      <Lightbox
+        images={images}
+        index={selectedIndex}
+        onClose={() => setSelectedIndex(null)}
+        onPrev={goPrev}
+        onNext={goNext}
+      />
     </div>
   );
 }
