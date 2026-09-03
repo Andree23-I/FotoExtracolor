@@ -327,15 +327,15 @@ const translations = {
       staffList: [
         {
           name: "Annalisa Capasso",
-          role: "Stampa Digitale & Grafica",
+          role: "Stampa Digitale & Conversione VHS",
         },
         {
           name: "Chiara Capasso",
-          role: "Fotografia di Studio & Eventi",
+          role: "Stampa Digitale & Assistenza Clienti",
         },
         {
           name: "Carmen Capasso",
-          role: "Accoglienza & Assistenza Clienti",
+          role: "Eventi & Fotoritocco",
         },
       ],
       galleryKicker: "Archivio Fotografico",
@@ -452,15 +452,15 @@ const translations = {
       staffList: [
         {
           name: "Annalisa Capasso",
-          role: "Digital Print & Graphics Specialist",
+          role: "Digital Print & VHS Conversion",
         },
         {
           name: "Chiara Capasso",
-          role: "Studio & Event Photographer",
+          role: "Digital Print & Customer Service",
         },
         {
           name: "Carmen Capasso",
-          role: "Customer Relations & Print Advisory",
+          role: "Event & Photo Retouching",
         },
       ],
       galleryKicker: "Photo Archive",
