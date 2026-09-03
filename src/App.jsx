@@ -328,17 +328,14 @@ const translations = {
         {
           name: "Annalisa Capasso",
           role: "Stampa Digitale & Grafica",
-          desc: "Specialista nella gestione del colore, fotoritocco avanzato e creazione di fotogadget personalizzati.",
         },
         {
           name: "Chiara Capasso",
           role: "Fotografia di Studio & Eventi",
-          desc: "Cura i servizi in sala pose, i ritratti di famiglia e i reportage fotografici per eventi speciali.",
         },
         {
           name: "Carmen Capasso",
           role: "Accoglienza & Assistenza Clienti",
-          desc: "Il punto di riferimento per consigli, selezione stampe, album fotografici e stampe veloci.",
         },
       ],
       galleryKicker: "Archivio Fotografico",
@@ -456,17 +453,14 @@ const translations = {
         {
           name: "Annalisa Capasso",
           role: "Digital Print & Graphics Specialist",
-          desc: "Expert in colour management, advanced photo editing, and personalized photo gifts.",
         },
         {
           name: "Chiara Capasso",
           role: "Studio & Event Photographer",
-          desc: "Specialized in portrait sessions, family shoots, and on-location celebration coverage.",
         },
         {
           name: "Carmen Capasso",
           role: "Customer Relations & Print Advisory",
-          desc: "Your go-to contact for format recommendations, photo books, and fast print orders.",
         },
       ],
       galleryKicker: "Photo Archive",
@@ -1996,7 +1990,6 @@ function ChiSiamo({ content, language }) {
                   <div className="chisiamo-team-info">
                     <h3>{member.name}</h3>
                     <span className="chisiamo-team-role">{member.role}</span>
-                    <p className="chisiamo-team-desc">{member.desc}</p>
                   </div>
                 </div>
               );
