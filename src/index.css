@@ -4889,4 +4889,20 @@ body.nav-open {
     color: #e8e4db;
 }
 
+/* ==========================================================================
+   4. RAM & RENDERING PERFORMANCE OPTIMIZATIONS (Content-Visibility & GPU offload)
+   ========================================================================== */
+.story-section,
+.services-preview,
+.staff-section,
+.contact-section,
+.chisiamo-values-section,
+.chisiamo-team-section,
+.chisiamo-archive-section,
+.chisiamo-cta-section {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 500px;
+}
+
+
 

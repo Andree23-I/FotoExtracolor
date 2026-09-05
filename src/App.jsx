@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState, lazy, Suspense } from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -10,11 +10,43 @@ import {
 import "./index.css";
 import Lightbox from "./components/Lightbox.jsx";
 import Carousel from "./components/Carousel.jsx";
-import AdminPage from "./components/AdminPage.jsx";
 import logo from "./assets/logo.jpeg";
 import heroPhoto from "./assets/scuro.jpeg";
 import lightHeroPhoto from "./assets/chiaro.jpeg";
 import atelierPhoto from "./assets/hero_background.jpg";
+
+// Lazy-load admin route to prevent loading admin bundle in memory for regular visitors
+const AdminPage = lazy(() => import("./components/AdminPage.jsx"));
+
+// Hoisted static image asset collections (initialized once at module startup, reducing garbage collection & RAM)
+const STORIA_IMAGES = Object.values(
+  import.meta.glob("/src/assets/Photos/Storia/**/*.{jpg,jpeg,png}", {
+    eager: true,
+    query: "?url",
+    import: "default",
+  }),
+);
+
+const STAFF_GLOBS = import.meta.glob(
+  [
+    "/src/assets/staff/*.{jpg,jpeg,png}",
+    "/src/assets/Photos/Staff/*.{jpg,jpeg,png}",
+  ],
+  { eager: true, query: "?url", import: "default" },
+);
+
+const STAFF_IMAGE_MAP = {};
+Object.entries(STAFF_GLOBS).forEach(([path, url]) => {
+  const fname = path.split("/").pop().toLowerCase();
+  STAFF_IMAGE_MAP[fname] = url;
+});
+
+const getStaffAvatar = (name) => {
+  if (!name) return null;
+  const first = name.split(" ")[0].toLowerCase();
+  const key = Object.keys(STAFF_IMAGE_MAP).find((k) => k.includes(first));
+  return key ? STAFF_IMAGE_MAP[key] : null;
+};
 
 // SVG Icon Components
 function IconHome(props) {
@@ -560,7 +592,13 @@ function HeaderTray({ language, setLanguage, theme, toggleTheme, content }) {
   const [clock, setClock] = useState(new Date());
 
   useEffect(() => {
-    const timer = setInterval(() => setClock(new Date()), 1000);
+    // Only tick when tab is active in foreground, saving CPU & RAM
+    const update = () => {
+      if (document.visibilityState === "visible") {
+        setClock(new Date());
+      }
+    };
+    const timer = setInterval(update, 1000);
     return () => clearInterval(timer);
   }, []);
 
@@ -634,7 +672,7 @@ function TopHeaderBar({ language, setLanguage, theme, toggleTheme, content, onOp
     <header className="site-header-top">
       <div className="header-brand" onClick={() => navigate("/")} role="button" tabIndex={0}>
         <div className="brand-logo-wrapper">
-          <img src={logo} alt="Foto Extracolor Logo" className="header-logo-img" />
+          <img src={logo} alt="Foto Extracolor Logo" className="header-logo-img" decoding="async" />
 
         </div>
         <div className="brand-titles">
@@ -906,7 +944,14 @@ function RoutedContent({ content, language, theme, onOpenPhotoModal }) {
         <Route path="/servizi" element={<Servizi content={content} language={language} />} />
         <Route path="/chisiamo" element={<ChiSiamo content={content} language={language} />} />
         <Route path="/portfolio" element={<Portfolio content={content} language={language} />} />
-        <Route path="/admin" element={<AdminPage />} />
+        <Route 
+          path="/admin" 
+          element={
+            <Suspense fallback={<div className="page-loading-spinner" style={{ minHeight: "60vh" }}></div>}>
+              <AdminPage />
+            </Suspense>
+          } 
+        />
       </Routes>
     </main>
   );
@@ -916,15 +961,6 @@ function Home({ content, language, theme, onOpenPhotoModal }) {
   const heroRef = useRef(null);
   const navigate = useNavigate();
   const dynamicServices = useDynamicServices();
-
-  // Load Storia images - use exact same pattern as Portfolio
-  const storiaImages = Object.values(
-    import.meta.glob("/src/assets/Photos/Storia/**/*.{jpg,jpeg,png}", {
-      eager: true,
-      query: "?url",
-      import: "default",
-    }),
-  );
 
   useEffect(() => {
     const animationClasses = [
@@ -959,23 +995,6 @@ function Home({ content, language, theme, onOpenPhotoModal }) {
 
     return () => observer.disconnect();
   }, [language, dynamicServices]);
-
-  // Load staff avatars from either /src/assets/staff or existing
-  // /src/assets/Photos/Staff — filenames should include the first name
-  // (e.g. carmen.jpg, chiara.jpg, annalisa.jpg).
-  const staffGlobs = import.meta.glob(
-    [
-      "/src/assets/staff/*.{jpg,jpeg,png}",
-      "/src/assets/Photos/Staff/*.{jpg,jpeg,png}",
-    ],
-    { eager: true, query: "?url", import: "default" },
-  );
-
-  const staffImageMap = {};
-  Object.entries(staffGlobs).forEach(([path, url]) => {
-    const fname = path.split("/").pop().toLowerCase();
-    staffImageMap[fname] = url;
-  });
 
   const handleHeroScroll = (event) => {
     event.preventDefault();
@@ -1128,7 +1147,7 @@ function Home({ content, language, theme, onOpenPhotoModal }) {
             <p>{renderStoryText(content.home.storyText2, "Riccardo")}</p>
           </div>
           <div className="image-content fade-in-right">
-            <Carousel images={storiaImages} language={language} />
+            <Carousel images={STORIA_IMAGES} language={language} />
           </div>
         </div>
       </section>
@@ -1172,41 +1191,33 @@ function Home({ content, language, theme, onOpenPhotoModal }) {
         <span className="section-kicker elegant-scale-glow">{content.home.staffKicker}</span>
         <h2 className="elegant-fade-up">{content.home.staffTitle}</h2>
         <div className="staff-grid">
-            {(() => {
-              const getStaffImage = (name) => {
-                const first = name.split(" ")[0].toLowerCase();
-                const key = Object.keys(staffImageMap).find((k) =>
-                  k.includes(first),
-                );
-                return key ? staffImageMap[key] : null;
-              };
-
-              return STAFF[language].map((member, idx) => {
-                const img = getStaffImage(member.name);
-                return (
-                  <div className={`staff-card fade-in-scale stagger-${(idx % 5) + 1}`} key={member.name}>
-                    {img ? (
-                      <div className="staff-avatar" aria-hidden="true">
-                        <img
-                          src={img}
-                          alt={member.name}
-                          className="staff-avatar-img"
-                        />
-                      </div>
-                    ) : (
-                      <div className="staff-avatar" aria-hidden="true">
-                        {member.name
-                          .split(" ")
-                          .map((word) => word[0])
-                          .join("")}
-                      </div>
-                    )}
-                    <h3>{member.name}</h3>
-                    <p>Foto Extracolor</p>
-                  </div>
-                );
-              });
-            })()}
+            {STAFF[language].map((member, idx) => {
+              const img = getStaffAvatar(member.name);
+              return (
+                <div className={`staff-card fade-in-scale stagger-${(idx % 5) + 1}`} key={member.name}>
+                  {img ? (
+                    <div className="staff-avatar" aria-hidden="true">
+                      <img
+                        src={img}
+                        alt={member.name}
+                        className="staff-avatar-img"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </div>
+                  ) : (
+                    <div className="staff-avatar" aria-hidden="true">
+                      {member.name
+                        .split(" ")
+                        .map((word) => word[0])
+                        .join("")}
+                    </div>
+                  )}
+                  <h3>{member.name}</h3>
+                  <p>Foto Extracolor</p>
+                </div>
+              );
+            })}
         </div>
       </section>
 
@@ -1328,7 +1339,7 @@ function Home({ content, language, theme, onOpenPhotoModal }) {
                 height="350"
                 style={{ border: 0, borderRadius: "8px", display: "block" }}
                 allowFullScreen=""
-                loading="eager"
+                loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
                 title={content.home.mapTitle}
               ></iframe>
@@ -1796,6 +1807,7 @@ function Portfolio({ content, language }) {
               src={src}
               alt={`${content.portfolio?.altPrefix || "Scatto"} ${idx + 1}`}
               loading="lazy"
+              decoding="async"
             />
             <span className="gallery-item-icon">
               <svg
@@ -1833,36 +1845,6 @@ function Portfolio({ content, language }) {
 function ChiSiamo({ content, language }) {
   const [selectedIndex, setSelectedIndex] = useState(null);
 
-  // Load historical photos (from /src/assets/Photos/Storia)
-  const storiaImages = Object.values(
-    import.meta.glob("/src/assets/Photos/Storia/**/*.{jpg,jpeg,png}", {
-      eager: true,
-      query: "?url",
-      import: "default",
-    }),
-  );
-
-  // Load staff avatar photos
-  const staffGlobs = import.meta.glob(
-    [
-      "/src/assets/staff/*.{jpg,jpeg,png}",
-      "/src/assets/Photos/Staff/*.{jpg,jpeg,png}",
-    ],
-    { eager: true, query: "?url", import: "default" },
-  );
-
-  const staffImageMap = {};
-  Object.entries(staffGlobs).forEach(([path, url]) => {
-    const fname = path.split("/").pop().toLowerCase();
-    staffImageMap[fname] = url;
-  });
-
-  const getStaffImage = (name) => {
-    const first = name.split(" ")[0].toLowerCase();
-    const key = Object.keys(staffImageMap).find((k) => k.includes(first));
-    return key ? staffImageMap[key] : null;
-  };
-
   useEffect(() => {
     const elements = document.querySelectorAll(
       ".fade-in, .fade-in-left, .fade-in-right, .fade-in-scale",
@@ -1894,10 +1876,10 @@ function ChiSiamo({ content, language }) {
 
   const goPrev = () =>
     setSelectedIndex(
-      (prev) => (prev - 1 + storiaImages.length) % storiaImages.length,
+      (prev) => (prev - 1 + STORIA_IMAGES.length) % STORIA_IMAGES.length,
     );
   const goNext = () =>
-    setSelectedIndex((prev) => (prev + 1) % storiaImages.length);
+    setSelectedIndex((prev) => (prev + 1) % STORIA_IMAGES.length);
 
   return (
     <div className="chisiamo-page">
@@ -1948,7 +1930,7 @@ function ChiSiamo({ content, language }) {
             </p>
           </div>
           <div className="chisiamo-story-visual fade-in-right">
-            <Carousel images={storiaImages} language={language} />
+            <Carousel images={STORIA_IMAGES} language={language} />
           </div>
         </div>
       </section>
@@ -1990,7 +1972,7 @@ function ChiSiamo({ content, language }) {
         <div className="chisiamo-team-grid">
           {content.chisiamo.staffList &&
             content.chisiamo.staffList.map((member, idx) => {
-              const img = getStaffImage(member.name);
+              const img = getStaffAvatar(member.name);
               return (
                 <div
                   className={`chisiamo-team-card fade-in-scale stagger-${(idx % 3) + 1}`}
@@ -2002,6 +1984,8 @@ function ChiSiamo({ content, language }) {
                         src={img}
                         alt={member.name}
                         className="chisiamo-team-avatar-img"
+                        loading="lazy"
+                        decoding="async"
                       />
                     ) : (
                       <div className="chisiamo-team-avatar-fallback">
@@ -2033,7 +2017,7 @@ function ChiSiamo({ content, language }) {
         </div>
 
         <div className="chisiamo-archive-grid">
-          {storiaImages.slice(0, 12).map((src, idx) => (
+          {STORIA_IMAGES.slice(0, 12).map((src, idx) => (
             <div
               className="diapositive-mount-card fade-in"
               key={src}
@@ -2048,6 +2032,7 @@ function ChiSiamo({ content, language }) {
                   src={src}
                   alt={`Diapositiva Archivio ${idx + 1}`}
                   loading="lazy"
+                  decoding="async"
                 />
               </div>
               <div className="diapositive-label">

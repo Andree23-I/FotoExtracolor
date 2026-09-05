@@ -74,6 +74,8 @@ function Carousel({ images, language = 'it' }) {
               src={images[currentIndex]}
               alt={`Archivio Storico ${currentIndex + 1}`}
               className="carousel-film-img"
+              loading="lazy"
+              decoding="async"
               key={currentIndex}
             />
           </div>

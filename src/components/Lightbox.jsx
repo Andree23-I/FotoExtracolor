@@ -73,6 +73,7 @@ function Lightbox({ images = [], index, onClose, onPrev, onNext }) {
         src={images[index]}
         alt="Preview"
         className="lightbox-image"
+        decoding="async"
         onClick={(e) => e.stopPropagation()}
       />
 
