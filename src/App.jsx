@@ -1020,6 +1020,31 @@ function Home({ content, language, theme, onOpenPhotoModal }) {
           aria-hidden="true"
           title="Pannello Admin"
         ></button>
+
+        {/* Futuristic Camera HUD Viewfinder Overlay */}
+        <div className="camera-hud-overlay" aria-hidden="true">
+          <div className="hud-corner hud-tl"></div>
+          <div className="hud-corner hud-tr"></div>
+          <div className="hud-corner hud-bl"></div>
+          <div className="hud-corner hud-br"></div>
+          
+          <div className="hud-top-bar">
+            <span className="hud-rec-badge"><span className="hud-rec-dot"></span> LIVE // 60Y LAB</span>
+            <span className="hud-specs">4K RAW • 60 FPS • 1/500s • f/1.4 • ISO 100</span>
+            <span className="hud-battery">AF-C [99%]</span>
+          </div>
+
+          <div className="hud-focus-center">
+            <span className="hud-crosshair"></span>
+          </div>
+
+          <div className="hud-bottom-bar">
+            <span className="hud-tag">EXTRACOLOR // 1964-2026</span>
+            <span className="hud-exposure">+0.0 EV</span>
+            <span className="hud-coordinates">40°40' N 14°47' E [SALERNO]</span>
+          </div>
+        </div>
+
         <div className="hero-inner">
           <div className="hero-content fade-in">
             <span className="section-kicker">{content.home.kicker}</span>
@@ -1103,7 +1128,7 @@ function Home({ content, language, theme, onOpenPhotoModal }) {
             <p>{renderStoryText(content.home.storyText2, "Riccardo")}</p>
           </div>
           <div className="image-content fade-in-right">
-            <Carousel images={storiaImages} />
+            <Carousel images={storiaImages} language={language} />
           </div>
         </div>
       </section>
@@ -1923,7 +1948,7 @@ function ChiSiamo({ content, language }) {
             </p>
           </div>
           <div className="chisiamo-story-visual fade-in-right">
-            <Carousel images={storiaImages} />
+            <Carousel images={storiaImages} language={language} />
           </div>
         </div>
       </section>
@@ -2010,38 +2035,24 @@ function ChiSiamo({ content, language }) {
         <div className="chisiamo-archive-grid">
           {storiaImages.slice(0, 12).map((src, idx) => (
             <div
-              className="chisiamo-archive-item fade-in"
+              className="diapositive-mount-card fade-in"
               key={src}
               style={{ transitionDelay: `${(idx % 12) * 0.04}s` }}
               onClick={() => setSelectedIndex(idx)}
               role="button"
               tabIndex={0}
-              title="Ingrandisci foto"
+              title="Ingrandisci diapositiva"
             >
-              <img
-                src={src}
-                alt={`Archivio Storico ${idx + 1}`}
-                loading="lazy"
-              />
-              <div className="chisiamo-archive-overlay">
-                <span>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <circle cx="11" cy="11" r="8"></circle>
-                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                    <line x1="11" y1="8" x2="11" y2="14"></line>
-                    <line x1="8" y1="11" x2="14" y2="11"></line>
-                  </svg>
-                </span>
+              <div className="diapositive-inner-frame">
+                <img
+                  src={src}
+                  alt={`Diapositiva Archivio ${idx + 1}`}
+                  loading="lazy"
+                />
+              </div>
+              <div className="diapositive-label">
+                <span>EXTRACOLOR // 1964</span>
+                <span>SLIDE #{String(idx + 1).padStart(2, "0")}</span>
               </div>
             </div>
           ))}

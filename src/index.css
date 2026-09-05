@@ -4520,3 +4520,373 @@ body.nav-open {
   z-index: 1;
 }
 
+/* ==========================================================================
+   FUTURISTIC & ANALOG PHOTOGRAPHY SUITE (35mm Film Strip, HUD & Diapositives)
+   ========================================================================== */
+
+/* 1. Camera HUD Viewfinder Overlay in Hero */
+.camera-hud-overlay {
+    position: absolute;
+    inset: 15px;
+    pointer-events: none;
+    z-index: 10;
+    border: 1px solid rgba(212, 175, 55, 0.15);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+@media (min-width: 768px) {
+    .camera-hud-overlay {
+        inset: 28px;
+    }
+}
+
+/* Reticle Corner Brackets */
+.hud-corner {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-color: var(--primary-color);
+    border-style: solid;
+    opacity: 0.85;
+    filter: drop-shadow(0 0 6px rgba(212, 175, 55, 0.6));
+}
+
+.hud-tl { top: 0; left: 0; border-width: 3px 0 0 3px; }
+.hud-tr { top: 0; right: 0; border-width: 3px 3px 0 0; }
+.hud-bl { bottom: 0; left: 0; border-width: 0 0 3px 3px; }
+.hud-br { bottom: 0; right: 0; border-width: 0 3px 3px 0; }
+
+/* Top Telemetry Bar */
+.hud-top-bar {
+    position: absolute;
+    top: 10px;
+    left: 15px;
+    right: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: var(--font-modern), monospace;
+    font-size: 0.72rem;
+    color: rgba(255, 255, 255, 0.75);
+    letter-spacing: 0.12em;
+}
+
+.hud-rec-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 2px 8px;
+    background: rgba(255, 0, 60, 0.15);
+    border: 1px solid rgba(255, 0, 60, 0.4);
+    border-radius: 4px;
+    color: #ff3366;
+    font-weight: 700;
+}
+
+.hud-rec-dot {
+    width: 7px;
+    height: 7px;
+    background: #ff3366;
+    border-radius: 50%;
+    animation: hudRecPulse 1.2s ease-in-out infinite;
+    box-shadow: 0 0 8px #ff3366;
+}
+
+@keyframes hudRecPulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.3; transform: scale(0.8); }
+}
+
+.hud-specs {
+    color: var(--primary-color);
+    font-weight: 600;
+    text-shadow: 0 0 8px rgba(212, 175, 55, 0.4);
+}
+
+@media (max-width: 640px) {
+    .hud-specs { display: none; }
+}
+
+/* Central Viewfinder Focus Reticle */
+.hud-focus-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 64px;
+    height: 64px;
+    border: 1px dashed rgba(212, 175, 55, 0.35);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: hudRotateScan 20s linear infinite;
+    opacity: 0.6;
+}
+
+@keyframes hudRotateScan {
+    from { transform: translate(-50%, -50%) rotate(0deg); }
+    to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+.hud-crosshair {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    border: 1px solid var(--primary-color);
+}
+
+/* Bottom Telemetry Bar */
+.hud-bottom-bar {
+    position: absolute;
+    bottom: 10px;
+    left: 15px;
+    right: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: var(--font-modern), monospace;
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.6);
+    letter-spacing: 0.1em;
+}
+
+@media (max-width: 640px) {
+    .hud-coordinates { display: none; }
+}
+
+/* ==========================================================================
+   2. 35mm FILM STRIP & INTERACTIVE NEGATIVE RIBBON
+   ========================================================================== */
+.filmstrip-section {
+    position: relative;
+    padding: 3.5rem 1.5rem 2rem 1.5rem;
+    max-width: 1400px;
+    margin: 0 auto;
+    overflow: hidden;
+}
+
+.filmstrip-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.filmstrip-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 18px;
+    background: rgba(212, 175, 55, 0.1);
+    border: 1px solid rgba(212, 175, 55, 0.35);
+    border-radius: 999px;
+    font-family: var(--font-modern), monospace;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    box-shadow: 0 0 15px rgba(212, 175, 55, 0.15);
+}
+
+.filmstrip-hint {
+    font-size: 0.88rem;
+    color: var(--text-secondary);
+    margin-top: 0.6rem;
+    font-weight: 300;
+}
+
+.filmstrip-wrapper {
+    position: relative;
+    width: 100%;
+    overflow-x: auto;
+    padding: 1rem 0.5rem 2rem 0.5rem;
+    scrollbar-width: thin;
+}
+
+.filmstrip-track {
+    display: flex;
+    gap: 18px;
+    width: max-content;
+    padding: 0 1rem;
+}
+
+/* Authentic 35mm Film Frame Container */
+.filmstrip-frame-container {
+    position: relative;
+    width: 260px;
+    background: #0a0a0c;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7), 0 0 20px rgba(212, 175, 55, 0.08);
+    padding: 8px 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    cursor: pointer;
+    transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.4s ease, border-color 0.4s ease;
+    user-select: none;
+}
+
+.filmstrip-frame-container:hover {
+    transform: translateY(-8px) scale(1.03);
+    border-color: rgba(212, 175, 55, 0.6);
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.9), 0 0 30px rgba(212, 175, 55, 0.35);
+}
+
+/* Sprocket Holes Ribbon */
+.filmstrip-sprockets {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 4px;
+    height: 18px;
+    background: #000;
+    border-radius: 3px;
+}
+
+.sprocket-hole {
+    width: 11px;
+    height: 12px;
+    background: #181818;
+    border-radius: 2px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.9);
+}
+
+.film-edge-code {
+    font-family: monospace;
+    font-size: 0.6rem;
+    font-weight: 700;
+    color: #e6a817;
+    letter-spacing: 0.12em;
+    text-shadow: 0 0 4px rgba(230, 168, 23, 0.6);
+}
+
+/* Film Photo Window with Developing Effect */
+.filmstrip-photo-window {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    border-radius: 4px;
+    background: #000;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.8);
+}
+
+.filmstrip-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: invert(0.92) hue-rotate(190deg) contrast(1.3) sepia(0.35) brightness(0.85);
+    transition: filter 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.6s ease;
+}
+
+/* On Hover: Develop Film into Full Color Positive */
+.filmstrip-frame-container:hover .filmstrip-img {
+    filter: invert(0) hue-rotate(0deg) contrast(1.05) sepia(0) brightness(1.08);
+    transform: scale(1.05);
+}
+
+.film-frame-number {
+    position: absolute;
+    bottom: 6px;
+    left: 8px;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-family: monospace;
+    font-size: 0.65rem;
+    color: var(--primary-color);
+    border: 1px solid rgba(212, 175, 55, 0.3);
+}
+
+.film-status-tag {
+    position: absolute;
+    top: 6px;
+    right: 8px;
+    background: rgba(212, 175, 55, 0.2);
+    border: 1px solid rgba(212, 175, 55, 0.5);
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-family: monospace;
+    font-size: 0.6rem;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 0.08em;
+    transition: all 0.3s ease;
+}
+
+.filmstrip-frame-container:hover .film-status-tag {
+    background: rgba(34, 197, 94, 0.3);
+    border-color: rgba(34, 197, 94, 0.8);
+    color: #86efac;
+}
+
+/* ==========================================================================
+   3. DIAPOSITIVE SLIDE MOUNT (Cornici Diapositiva Vintage & Futuriste)
+   ========================================================================== */
+.diapositive-mount-card {
+    position: relative;
+    background: #141416;
+    border: 6px solid #e8e4db;
+    border-radius: 8px;
+    padding: 6px 6px 26px 6px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6), inset 0 0 10px rgba(0, 0, 0, 0.15);
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+    overflow: hidden;
+}
+
+:root[data-theme="light"] .diapositive-mount-card {
+    border-color: #2b2b2b;
+    background: #000;
+}
+
+.diapositive-mount-card:hover {
+    transform: translateY(-8px) scale(1.04) rotate(-0.5deg);
+    border-color: var(--primary-color);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8), 0 0 25px rgba(212, 175, 55, 0.4);
+}
+
+.diapositive-inner-frame {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    border-radius: 4px;
+    background: #000;
+    border: 2px solid rgba(0, 0, 0, 0.8);
+}
+
+.diapositive-inner-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.diapositive-mount-card:hover .diapositive-inner-frame img {
+    transform: scale(1.1);
+}
+
+.diapositive-label {
+    position: absolute;
+    bottom: 5px;
+    left: 8px;
+    right: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: var(--font-modern), monospace;
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: #333;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+:root[data-theme="light"] .diapositive-label {
+    color: #e8e4db;
+}
+
+
