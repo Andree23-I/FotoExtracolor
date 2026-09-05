@@ -48,6 +48,42 @@ const getStaffAvatar = (name) => {
   return key ? STAFF_IMAGE_MAP[key] : null;
 };
 
+// Interactive Camera HUD Settings & LUT Profiles
+const HUD_RESOLUTIONS = ["8K PRO", "4K RAW", "1080p CINEMA", "720p RETRO"];
+
+const HUD_COLOR_PROFILES = [
+  { id: "EXTRACOLOR", label: "🎨 Extracolor", desc: "Vibrante Lab" },
+  { id: "KODACHROME", label: "🎞️ Kodachrome", desc: "Vintage 1964" },
+  { id: "NOIR", label: "🖤 Noir B&W", desc: "Silver Halide" },
+  { id: "GOLDEN", label: "🌅 Golden Hour", desc: "Caldo Tramonto" },
+  { id: "CYBER", label: "🧪 Cyber Teal", desc: "Sci-Fi Grade" },
+];
+
+const computeHeroFilter = (profileId, exposureVal, resolution) => {
+  const brightness = 1 + exposureVal * 0.18;
+  let filterStr = `brightness(${brightness.toFixed(2)})`;
+
+  if (profileId === "KODACHROME") {
+    filterStr += " sepia(0.28) saturate(1.35) contrast(1.14)";
+  } else if (profileId === "NOIR") {
+    filterStr += " grayscale(1) contrast(1.32)";
+  } else if (profileId === "GOLDEN") {
+    filterStr += " sepia(0.38) saturate(1.5) hue-rotate(-12deg) contrast(1.1)";
+  } else if (profileId === "CYBER") {
+    filterStr += " hue-rotate(150deg) saturate(1.3) contrast(1.22)";
+  } else {
+    filterStr += " saturate(1.12) contrast(1.06)";
+  }
+
+  if (resolution === "8K PRO") {
+    filterStr += " contrast(1.08)";
+  } else if (resolution === "720p RETRO") {
+    filterStr += " contrast(1.18) sepia(0.12)";
+  }
+
+  return filterStr;
+};
+
 // SVG Icon Components
 function IconHome(props) {
   return (
@@ -962,6 +998,45 @@ function Home({ content, language, theme, onOpenPhotoModal }) {
   const navigate = useNavigate();
   const dynamicServices = useDynamicServices();
 
+  // Interactive Camera HUD Live Controls State
+  const [hudRes, setHudRes] = useState("4K RAW");
+  const [hudProfile, setHudProfile] = useState("EXTRACOLOR");
+  const [hudExposure, setHudExposure] = useState(0); // in EV steps: -1.0 to +1.0
+  const [isHudDrawerOpen, setIsHudDrawerOpen] = useState(false);
+
+  const cycleResolution = (e) => {
+    e?.stopPropagation();
+    setHudRes((curr) => {
+      const idx = HUD_RESOLUTIONS.indexOf(curr);
+      return HUD_RESOLUTIONS[(idx + 1) % HUD_RESOLUTIONS.length];
+    });
+  };
+
+  const cycleProfile = (e) => {
+    e?.stopPropagation();
+    setHudProfile((curr) => {
+      const idx = HUD_COLOR_PROFILES.findIndex((p) => p.id === curr);
+      return HUD_COLOR_PROFILES[(idx + 1) % HUD_COLOR_PROFILES.length].id;
+    });
+  };
+
+  const changeExposure = (delta, e) => {
+    e?.stopPropagation();
+    setHudExposure((curr) => {
+      const next = Math.round((curr + delta) * 10) / 10;
+      return Math.max(-1.0, Math.min(1.0, next));
+    });
+  };
+
+  const resetCameraSettings = (e) => {
+    e?.stopPropagation();
+    setHudRes("4K RAW");
+    setHudProfile("EXTRACOLOR");
+    setHudExposure(0);
+  };
+
+  const currentHeroFilter = computeHeroFilter(hudProfile, hudExposure, hudRes);
+
   useEffect(() => {
     const animationClasses = [
       ".fade-in",
@@ -1025,14 +1100,21 @@ function Home({ content, language, theme, onOpenPhotoModal }) {
       <header
         ref={heroRef}
         className="hero"
-        style={{
-          backgroundImage:
-            theme === "dark"
-              ? `linear-gradient(135deg, rgba(17, 17, 17, 0.55), rgba(17, 17, 17, 0.7)), url(${heroPhoto})`
-              : `linear-gradient(135deg, rgba(8, 8, 8, 0.18), rgba(8, 8, 8, 0.34)), url(${lightHeroPhoto})`,
-          position: 'relative'
-        }}
+        style={{ position: 'relative' }}
       >
+        {/* Dynamic Background Photo Layer with real-time grading filter */}
+        <div 
+          className={`hero-bg-media res-${hudRes.toLowerCase().replace(/[^a-z0-9]/g, '')} lut-${hudProfile.toLowerCase()}`}
+          style={{
+            backgroundImage:
+              theme === "dark"
+                ? `linear-gradient(135deg, rgba(17, 17, 17, 0.55), rgba(17, 17, 17, 0.7)), url(${heroPhoto})`
+                : `linear-gradient(135deg, rgba(8, 8, 8, 0.18), rgba(8, 8, 8, 0.34)), url(${lightHeroPhoto})`,
+            filter: currentHeroFilter,
+          }}
+          aria-hidden="true"
+        ></div>
+
         <button 
           className="secret-admin-btn"
           onClick={() => navigate("/admin")}
@@ -1040,28 +1122,168 @@ function Home({ content, language, theme, onOpenPhotoModal }) {
           title="Pannello Admin"
         ></button>
 
-        {/* Futuristic Camera HUD Viewfinder Overlay */}
-        <div className="camera-hud-overlay" aria-hidden="true">
-          <div className="hud-corner hud-tl"></div>
-          <div className="hud-corner hud-tr"></div>
-          <div className="hud-corner hud-bl"></div>
-          <div className="hud-corner hud-br"></div>
+        {/* Futuristic Interactive Camera HUD Viewfinder Overlay */}
+        <div className="camera-hud-overlay">
+          <div className="hud-corner hud-tl" aria-hidden="true"></div>
+          <div className="hud-corner hud-tr" aria-hidden="true"></div>
+          <div className="hud-corner hud-bl" aria-hidden="true"></div>
+          <div className="hud-corner hud-br" aria-hidden="true"></div>
           
+          {/* Top Telemetry & Live Interactive Controls Bar */}
           <div className="hud-top-bar">
             <span className="hud-rec-badge"><span className="hud-rec-dot"></span> LIVE // 60Y LAB</span>
-            <span className="hud-specs">4K RAW • 60 FPS • 1/500s • f/1.4 • ISO 100</span>
-            <span className="hud-battery">AF-C [99%]</span>
+            
+            <div className="hud-interactive-specs">
+              {/* Clickable Resolution Selector Pill */}
+              <button 
+                type="button"
+                className="hud-pill-btn res-btn" 
+                onClick={cycleResolution}
+                title="Clicca per cambiare risoluzione (8K, 4K, 1080p, 720p)"
+              >
+                <span className="hud-pill-highlight">{hudRes}</span>
+                <span className="hud-btn-sub">• 60 FPS • 1/500s • f/1.4</span>
+              </button>
+
+              {/* Clickable Color LUT Profile Selector Pill */}
+              <button 
+                type="button"
+                className="hud-pill-btn lut-btn" 
+                onClick={cycleProfile}
+                title="Clicca per cambiare profilo colore / grading"
+              >
+                <span>{HUD_COLOR_PROFILES.find(p => p.id === hudProfile)?.label || hudProfile}</span>
+              </button>
+            </div>
+
+            <button 
+              type="button"
+              className={`hud-lab-toggle-btn ${isHudDrawerOpen ? 'is-open' : ''}`}
+              onClick={() => setIsHudDrawerOpen(prev => !prev)}
+              title="Apri pannello regolazioni ottica e colori"
+            >
+              <span>⚙️ CAMERA LAB</span>
+            </button>
           </div>
 
-          <div className="hud-focus-center">
+          <div className="hud-focus-center" aria-hidden="true">
             <span className="hud-crosshair"></span>
           </div>
 
+          {/* Bottom Telemetry Bar with interactive EV exposure */}
           <div className="hud-bottom-bar">
             <span className="hud-tag">EXTRACOLOR // 1964-2026</span>
-            <span className="hud-exposure">+0.0 EV</span>
+            
+            {/* Interactive EV Exposure & Brightness Stepper */}
+            <div className="hud-exposure-stepper">
+              <span className="hud-exposure-lbl">EXP:</span>
+              <button 
+                type="button"
+                className="hud-stepper-btn"
+                onClick={(e) => changeExposure(-0.5, e)}
+                title="Diminuisci luminosità (-0.5 EV)"
+                disabled={hudExposure <= -1.0}
+              >
+                −
+              </button>
+              <span className="hud-exposure-display" title="Esposizione attuale">
+                {hudExposure > 0 ? `+${hudExposure.toFixed(1)}` : hudExposure.toFixed(1)} EV
+              </span>
+              <button 
+                type="button"
+                className="hud-stepper-btn"
+                onClick={(e) => changeExposure(+0.5, e)}
+                title="Aumenta luminosità (+0.5 EV)"
+                disabled={hudExposure >= 1.0}
+              >
+                +
+              </button>
+            </div>
+
             <span className="hud-coordinates">40°40' N 14°47' E [SALERNO]</span>
           </div>
+
+          {/* Floating Camera Lab Quick Settings Drawer */}
+          {isHudDrawerOpen && (
+            <div className="hud-drawer-panel" onClick={(e) => e.stopPropagation()}>
+              <div className="hud-drawer-header">
+                <span className="hud-drawer-title">🎛️ REGOLAZIONI SENSORE, OTTICA & COLORI</span>
+                <button 
+                  type="button"
+                  className="hud-drawer-close"
+                  onClick={() => setIsHudDrawerOpen(false)}
+                  title="Chiudi"
+                >
+                  ✕
+                </button>
+              </div>
+
+              <div className="hud-drawer-row">
+                <span className="hud-row-label">Risoluzione & Sensore:</span>
+                <div className="hud-options-chips">
+                  {HUD_RESOLUTIONS.map((res) => (
+                    <button
+                      key={res}
+                      type="button"
+                      className={`hud-chip ${hudRes === res ? 'active' : ''}`}
+                      onClick={() => setHudRes(res)}
+                    >
+                      {res}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="hud-drawer-row">
+                <span className="hud-row-label">Profilo Colore (Color Grading LUT):</span>
+                <div className="hud-options-chips">
+                  {HUD_COLOR_PROFILES.map((prof) => (
+                    <button
+                      key={prof.id}
+                      type="button"
+                      className={`hud-chip ${hudProfile === prof.id ? 'active' : ''}`}
+                      onClick={() => setHudProfile(prof.id)}
+                    >
+                      {prof.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="hud-drawer-row">
+                <div className="hud-row-header-wrap">
+                  <span className="hud-row-label">Luminosità ed Esposizione:</span>
+                  <span className="hud-val-pill">{hudExposure > 0 ? `+${hudExposure.toFixed(1)}` : hudExposure.toFixed(1)} EV</span>
+                </div>
+                <div className="hud-slider-wrap">
+                  <input
+                    type="range"
+                    min="-1"
+                    max="1"
+                    step="0.1"
+                    value={hudExposure}
+                    onChange={(e) => setHudExposure(parseFloat(e.target.value))}
+                    className="hud-range-slider"
+                  />
+                  <div className="hud-slider-ticks">
+                    <span>-1.0 (Scuro / Darkroom)</span>
+                    <span>0.0 (Neutro)</span>
+                    <span>+1.0 (Luminoso / Daylight)</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="hud-drawer-footer">
+                <button
+                  type="button"
+                  className="hud-reset-btn"
+                  onClick={resetCameraSettings}
+                >
+                  ↺ Ripristina Impostazioni Predefinite
+                </button>
+              </div>
+            </div>
+          )}
         </div>
 
         <div className="hero-inner">

@@ -4525,6 +4525,24 @@ body.nav-open {
    ========================================================================== */
 
 /* 1. Camera HUD Viewfinder Overlay in Hero */
+.hero-bg-media {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: 0;
+    transition: filter 0.45s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.45s ease;
+}
+
+.hero-bg-media.res-720pretro::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(0deg, rgba(0,0,0,0.14) 0px, rgba(0,0,0,0.14) 2px, transparent 2px, transparent 4px);
+    pointer-events: none;
+}
+
 .camera-hud-overlay {
     position: absolute;
     inset: 15px;
@@ -4550,6 +4568,7 @@ body.nav-open {
     border-style: solid;
     opacity: 0.85;
     filter: drop-shadow(0 0 6px rgba(212, 175, 55, 0.6));
+    pointer-events: none;
 }
 
 .hud-tl { top: 0; left: 0; border-width: 3px 0 0 3px; }
@@ -4557,7 +4576,7 @@ body.nav-open {
 .hud-bl { bottom: 0; left: 0; border-width: 0 0 3px 3px; }
 .hud-br { bottom: 0; right: 0; border-width: 0 3px 3px 0; }
 
-/* Top Telemetry Bar */
+/* Top Telemetry & Control Bar */
 .hud-top-bar {
     position: absolute;
     top: 10px;
@@ -4566,10 +4585,12 @@ body.nav-open {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 8px;
     font-family: var(--font-modern), monospace;
     font-size: 0.72rem;
     color: rgba(255, 255, 255, 0.75);
-    letter-spacing: 0.12em;
+    letter-spacing: 0.08em;
+    z-index: 12;
 }
 
 .hud-rec-badge {
@@ -4582,6 +4603,7 @@ body.nav-open {
     border-radius: 4px;
     color: #ff3366;
     font-weight: 700;
+    flex-shrink: 0;
 }
 
 .hud-rec-dot {
@@ -4598,14 +4620,85 @@ body.nav-open {
     50% { opacity: 0.3; transform: scale(0.8); }
 }
 
-.hud-specs {
-    color: var(--primary-color);
+/* Interactive Top Bar Pills */
+.hud-interactive-specs {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    pointer-events: auto;
+}
+
+.hud-pill-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(0, 0, 0, 0.65);
+    border: 1px solid rgba(212, 175, 55, 0.35);
+    border-radius: 5px;
+    padding: 3px 9px;
+    font-family: var(--font-modern), monospace;
+    font-size: 0.7rem;
     font-weight: 600;
-    text-shadow: 0 0 8px rgba(212, 175, 55, 0.4);
+    color: var(--primary-color);
+    cursor: pointer;
+    transition: all 0.25s ease;
+    backdrop-filter: blur(8px);
+}
+
+.hud-pill-btn:hover {
+    background: rgba(212, 175, 55, 0.22);
+    border-color: var(--primary-color);
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.4);
+    transform: translateY(-1px);
+}
+
+.hud-pill-highlight {
+    font-weight: 800;
+    color: #fff;
+    background: rgba(212, 175, 55, 0.3);
+    padding: 1px 4px;
+    border-radius: 3px;
+}
+
+.hud-btn-sub {
+    color: rgba(255, 255, 255, 0.65);
+    font-size: 0.65rem;
+}
+
+@media (max-width: 768px) {
+    .hud-btn-sub { display: none; }
+}
+
+.hud-lab-toggle-btn {
+    pointer-events: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 9px;
+    background: rgba(212, 175, 55, 0.15);
+    border: 1px solid rgba(212, 175, 55, 0.5);
+    border-radius: 5px;
+    color: #fff;
+    font-family: var(--font-modern), monospace;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(8px);
+}
+
+.hud-lab-toggle-btn:hover,
+.hud-lab-toggle-btn.is-open {
+    background: var(--primary-color);
+    color: #000;
+    box-shadow: 0 0 12px rgba(212, 175, 55, 0.5);
 }
 
 @media (max-width: 640px) {
-    .hud-specs { display: none; }
+    .hud-interactive-specs {
+        display: none;
+    }
 }
 
 /* Central Viewfinder Focus Reticle */
@@ -4623,6 +4716,7 @@ body.nav-open {
     justify-content: center;
     animation: hudRotateScan 20s linear infinite;
     opacity: 0.6;
+    pointer-events: none;
 }
 
 @keyframes hudRotateScan {
@@ -4646,14 +4740,237 @@ body.nav-open {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 8px;
     font-family: var(--font-modern), monospace;
     font-size: 0.7rem;
     color: rgba(255, 255, 255, 0.6);
-    letter-spacing: 0.1em;
+    letter-spacing: 0.08em;
+    z-index: 12;
+}
+
+.hud-exposure-stepper {
+    pointer-events: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(0, 0, 0, 0.65);
+    border: 1px solid rgba(212, 175, 55, 0.4);
+    border-radius: 5px;
+    padding: 2px 8px;
+    font-family: var(--font-modern), monospace;
+    font-size: 0.7rem;
+    backdrop-filter: blur(8px);
+}
+
+.hud-exposure-lbl {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.65rem;
+}
+
+.hud-exposure-display {
+    color: var(--primary-color);
+    font-weight: 700;
+    min-width: 48px;
+    text-align: center;
+}
+
+.hud-stepper-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+    color: #fff;
+    width: 18px;
+    height: 18px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.hud-stepper-btn:hover:not(:disabled) {
+    background: var(--primary-color);
+    color: #000;
+    border-color: var(--primary-color);
+}
+
+.hud-stepper-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
 }
 
 @media (max-width: 640px) {
     .hud-coordinates { display: none; }
+}
+
+/* Floating Camera Lab Drawer Panel */
+.hud-drawer-panel {
+    pointer-events: auto;
+    position: absolute;
+    top: 48px;
+    right: 15px;
+    width: min(340px, calc(100% - 30px));
+    background: rgba(12, 12, 16, 0.94);
+    border: 1px solid rgba(212, 175, 55, 0.5);
+    border-radius: 10px;
+    padding: 14px 16px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.85), 0 0 25px rgba(212, 175, 55, 0.25);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    z-index: 25;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    animation: hudDrawerFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes hudDrawerFadeIn {
+    from { opacity: 0; transform: translateY(-8px) scale(0.97); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.hud-drawer-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+}
+
+.hud-drawer-title {
+    font-family: var(--font-modern), monospace;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    letter-spacing: 0.08em;
+}
+
+.hud-drawer-close {
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.9rem;
+    cursor: pointer;
+    padding: 2px 6px;
+    border-radius: 4px;
+    transition: color 0.2s;
+}
+
+.hud-drawer-close:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.hud-drawer-row {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.hud-row-header-wrap {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.hud-row-label {
+    font-family: var(--font-modern), monospace;
+    font-size: 0.68rem;
+    color: rgba(255, 255, 255, 0.75);
+    font-weight: 600;
+}
+
+.hud-val-pill {
+    font-family: monospace;
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    background: rgba(212, 175, 55, 0.15);
+    padding: 1px 6px;
+    border-radius: 3px;
+    border: 1px solid rgba(212, 175, 55, 0.3);
+}
+
+.hud-options-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.hud-chip {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 4px;
+    color: rgba(255, 255, 255, 0.8);
+    font-family: var(--font-modern), monospace;
+    font-size: 0.65rem;
+    font-weight: 600;
+    padding: 4px 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.hud-chip:hover {
+    border-color: rgba(212, 175, 55, 0.6);
+    color: #fff;
+}
+
+.hud-chip.active {
+    background: var(--primary-color);
+    color: #000;
+    border-color: var(--primary-color);
+    font-weight: 700;
+    box-shadow: 0 0 8px rgba(212, 175, 55, 0.4);
+}
+
+.hud-slider-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.hud-range-slider {
+    width: 100%;
+    accent-color: var(--primary-color);
+    cursor: pointer;
+    height: 5px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 3px;
+}
+
+.hud-slider-ticks {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.58rem;
+    color: rgba(255, 255, 255, 0.45);
+    font-family: monospace;
+}
+
+.hud-drawer-footer {
+    padding-top: 6px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.hud-reset-btn {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px dashed rgba(212, 175, 55, 0.3);
+    border-radius: 4px;
+    color: rgba(212, 175, 55, 0.85);
+    font-family: var(--font-modern), monospace;
+    font-size: 0.65rem;
+    font-weight: 600;
+    padding: 5px 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.hud-reset-btn:hover {
+    background: rgba(212, 175, 55, 0.15);
+    color: #fff;
+    border-color: var(--primary-color);
 }
 
 /* ==========================================================================
