@@ -97,6 +97,8 @@ switch ($action) {
             http_response_code(400);
             echo json_encode(["error" => "Dati mancanti"]);
         }
+        break;
+
     case 'getConfig':
         $configFile = __DIR__ . '/uploads/config.json';
         if (file_exists($configFile)) {

@@ -15,7 +15,7 @@ function createStaticRoutePages() {
     writeBundle() {
       const indexFile = resolve(outputDirectory, "index.html");
 
-      for (const route of ["servizi", "portfolio"]) {
+      for (const route of ["servizi", "portfolio", "chisiamo", "admin"]) {
         const routeDirectory = resolve(outputDirectory, route);
         mkdirSync(routeDirectory, { recursive: true });
         copyFileSync(indexFile, resolve(routeDirectory, "index.html"));

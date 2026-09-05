@@ -2315,7 +2315,7 @@ function ChiSiamo({ content, language }) {
 
       {/* Lightbox for archive photos */}
       <Lightbox
-        images={storiaImages}
+        images={STORIA_IMAGES}
         index={selectedIndex}
         onClose={() => setSelectedIndex(null)}
         onPrev={goPrev}
