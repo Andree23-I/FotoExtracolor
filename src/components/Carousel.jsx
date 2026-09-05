@@ -72,6 +72,13 @@ function Carousel({ images, language = 'it' }) {
           <div className="carousel-slide-content">
             <img
               src={images[currentIndex]}
+              alt=""
+              aria-hidden="true"
+              className="carousel-film-ambient"
+              key={`ambient-${currentIndex}`}
+            />
+            <img
+              src={images[currentIndex]}
               alt={`Archivio Storico ${currentIndex + 1}`}
               className="carousel-film-img"
               loading="lazy"
